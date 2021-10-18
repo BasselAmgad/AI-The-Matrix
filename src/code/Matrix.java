@@ -5,27 +5,13 @@ public class Matrix extends SearchProblem {
     //grid size
     byte M, N;
 
-    int telephoneX, telephoneY;
+    byte telephoneX, telephoneY;
 
-    int neoX, neoY;
-    int c; // <=4
-
-    // indexes of currently carried hostages ?
-    int[] currentC;
+    int carryCapacity; // <=4
 
     int n_hostages, n_pills, n_pads, n_agents;
 
-
     int[] padsX, padsY;
-
-    int[] pillsX, pillsY;
-
-    int[] agentsX, agentsY;
-
-    int[] hostagesX, hostagesY;
-    int[] hostagesDamage;
-
-    int cost;
 
     static String genGrid() {
         // test
