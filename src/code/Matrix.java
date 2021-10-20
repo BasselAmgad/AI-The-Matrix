@@ -90,27 +90,21 @@ public class Matrix extends SearchProblem {
             hostages[i+2] = damage+"";
         }
         sb.append(String.join(",", hostages));
-        System.out.println("Hostages line: "+ String.join(",", hostages));
         return sb.toString();
     }
 
     static String solve(String grid, String strategy, boolean visualize) {
-        State initialState = new State();
-
-
         return "";
     }
 
     static void visualize(String grid){
         String[] entries = grid.split(";");
-//        for (String e: entries){
-//            System.out.println(e);
-//        }
+
         String[] dims = entries[0].split(",");
         int M = Integer.parseInt(dims[0]);
         int N = Integer.parseInt(dims[1]);
 
-        int carryCapacity = Integer.parseInt(entries[1]);
+//        int carryCapacity = Integer.parseInt(entries[1]);
 
         String[] neo = entries[2].split(",");
         int neoX = Integer.parseInt(neo[0]);
@@ -189,7 +183,6 @@ public class Matrix extends SearchProblem {
         for (int i=0;i<M;i++){
             System.out.printf(strf, i);
             for (int j=0;j<N;j++){
-//                System.out.printf("[%d][%d]: %s\n", i, j, vis[i][j]);
                 System.out.printf(strf, vis[i][j]);
             }
             System.out.println();
@@ -197,15 +190,9 @@ public class Matrix extends SearchProblem {
     }
 
     public static void main(String[] args) {
-//        for (int i=0; i<1;i ++) {
-//            System.out.println(genGrid());
-//        }
-//        visualize("6,5;4;5,2;2,4;4,3;3,2,1,4,5,4,4,1;0,3,4,1,3,3,3,4;4,2,51,1,4,22,0,1,19,3,4,16,1,3,100,4,2,41,4,1,32,1,2,34;");
-//            visualize("5,10;2;0,8;2,0;0,7,2,0;4,0;3,4,2,7,2,7,3,4,4,9,1,3,1,3,4,9,3,7,0,0,0,0,3,7,3,5,0,6,0,6,3,5;4,7,98,1,7,19,1,0,28,3,1,74,4,3,72");
-        String p1 = "14,5;2;7,0;2,3;8,3,8,1,9,2,2,0;8,3,9,1,0,4,6,1;2,0,10,1,10,1,2,0;6,2,76,7,2,78,0,0,55,11,2,11,4,4,90,2,4,56,0,2,21,13,2,63,12,3,85,1,2,26";
+//        String p1 = "14,5;2;7,0;2,3;8,3,8,1,9,2,2,0;8,3,9,1,0,4,6,1;2,0,10,1,10,1,2,0;6,2,76,7,2,78,0,0,55,11,2,11,4,4,90,2,4,56,0,2,21,13,2,63,12,3,85,1,2,26";
         String problem = genGrid();
         System.out.println(problem);
         visualize(problem);
-
     }
 }
