@@ -1,5 +1,7 @@
 package code;
 
+import java.util.PriorityQueue;
+
 public class Matrix extends SearchProblem {
 
     //grid size
@@ -9,14 +11,37 @@ public class Matrix extends SearchProblem {
 
     int carryCapacity; // <=4
 
-    int n_hostages, n_pills, n_pads, n_agents;
-
     int[] startPadsX, startPadsY, finishPadsX, finishPadsY;
+
+    int timepnt = 0;
+
+    String Search(State initialState){
+        PriorityQueue<Node> queue = new PriorityQueue<>();
+        Node root = new BST_Node(initialState, null, null, 0, 0, timepnt++);
+        queue.add(root);
+        while (!queue.isEmpty()){
+            Node node = queue.remove();
+            if (goalTest(node.state)){
+                visualize(node.state);
+                return "Found a solution here";
+            }
+            else{//Expansion
+                expand(queue, node);
+            }
+        }
+        return "";
+    }
+    void expand(PriorityQueue<Node> queue, Node node){
+
+    }
+
 
     static String genGrid() {
         StringBuilder sb = new StringBuilder();
-        int N = 5 + (int)(Math.random()*11);
-        int M = 5 + (int)(Math.random()*11);
+//        int N = 5 + (int)(Math.random()*11);
+//        int M = 5 + (int)(Math.random()*11);
+        int N = 5;
+        int M = 5;
         sb.append(String.format("%d,%d;", M, N));
         int carryCapacity = 1 + (int)(Math.random()*4);
         sb.append(String.format("%d;", carryCapacity));
@@ -93,26 +118,22 @@ public class Matrix extends SearchProblem {
         return sb.toString();
     }
 
-    static String solve(String grid, String strategy, boolean visualize) {
-        return "";
-    }
-
-    static void visualize(String grid){
-        String[] entries = grid.split(";");
+    State parseProblem(String problem){
+        String[] entries = problem.split(";");
 
         String[] dims = entries[0].split(",");
-        int M = Integer.parseInt(dims[0]);
-        int N = Integer.parseInt(dims[1]);
+        byte M = Byte.parseByte(dims[0]);
+        byte N = Byte.parseByte(dims[1]);
 
-//        int carryCapacity = Integer.parseInt(entries[1]);
+        int carryCapacity = Integer.parseInt(entries[1]);
 
         String[] neo = entries[2].split(",");
         int neoX = Integer.parseInt(neo[0]);
         int neoY = Integer.parseInt(neo[1]);
 
         String[] tel = entries[3].split(",");
-        int telephoneX = Integer.parseInt(tel[0]);
-        int telephoneY = Integer.parseInt(tel[1]);
+        byte telephoneX = Byte.parseByte(tel[0]);
+        byte telephoneY = Byte.parseByte(tel[1]);
 
         String[] agents = entries[4].split(",");
         int[] agentsX = new int[agents.length>>1];
@@ -131,22 +152,55 @@ public class Matrix extends SearchProblem {
         }
 
         String[] pads = entries[6].split(",");
-        int[] padsX = new int[pads.length>>1];
-        int[] padsY = new int[pads.length>>1];
-        for (int i=0; i <padsX.length; i++){
-            padsX[i] = Integer.parseInt(pads[i<<1]);
-            padsY[i] = Integer.parseInt(pads[1+(i<<1)]);
+//        int[] padsX = new int[pads.length>>1];
+//        int[] padsY = new int[pads.length>>1];
+        int[] startPadsX = new int[pads.length/4];
+        int[] startPadsY = new int[pads.length/4];
+        int[] finishPadsX = new int[pads.length/4];
+        int[] finishPadsY = new int[pads.length/4];
+        for (int i=0; i <startPadsX.length; i++){
+            startPadsX[i] = Integer.parseInt(pads[i*4]);
+            startPadsY[i] = Integer.parseInt(pads[1+(i*4)]);
+            finishPadsX[i] = Integer.parseInt(pads[2+(i*4)]);
+            finishPadsY[i] = Integer.parseInt(pads[3+(i*4)]);
         }
 
         String[] hostages = entries[7].split(",");
         int[] hostagesX = new int[hostages.length/3];
         int[] hostagesY = new int[hostages.length/3];
-        int[] damages = new int[hostages.length/3];
+        int[] hostagesDamage = new int[hostages.length/3];
         for (int i=0; i <hostagesX.length; i++){
             hostagesX[i] = Integer.parseInt(hostages[(i*3)]);
             hostagesY[i] = Integer.parseInt(hostages[1+(i*3)]);
-            damages[i] = Integer.parseInt(hostages[2+(i*3)]);
+            hostagesDamage[i] = Integer.parseInt(hostages[2+(i*3)]);
         }
+
+        State initialState = new State(neoX, neoY, 0, new int[carryCapacity], pillsX, pillsY, agentsX, agentsY, hostagesX, hostagesY, hostagesDamage);
+        this.M = M;
+        this.N = N;
+        this.carryCapacity = carryCapacity;
+        this.telephoneX = telephoneX;
+        this.telephoneY = telephoneY;
+        this.startPadsX = startPadsX;
+        this.startPadsY = startPadsY;
+        this.finishPadsX = finishPadsX;
+        this.finishPadsY = finishPadsY;
+        return initialState;
+    }
+    static String solve(String grid, String strategy, boolean visualize) {
+        return "";
+    }
+
+    void visualize(State currentState){
+        int neoX = currentState.neoX;
+        int neoY = currentState.neoY;
+        int[] pillsX = currentState.pillsX;
+        int[] pillsY = currentState.pillsY;
+        int[] agentsX = currentState.agentsX;
+        int[] agentsY = currentState.agentsY;
+        int[] hostagesX = currentState.hostagesX;
+        int[] hostagesY = currentState.hostagesY;
+        int[] hostagesDamage = currentState.hostagesDamage;
 
         // Preparing to print the state of the grid
         String[][] vis = new String[M][N];
@@ -164,35 +218,54 @@ public class Matrix extends SearchProblem {
             vis[agentsX[i]][agentsY[i]] += "A";
         }
         int cntrPds = 0;
-        for (int i=0; i< padsX.length;i+=2){
-            vis[padsX[i]][padsY[i]] += "F"+cntrPds;
-            vis[padsX[i+1]][padsY[i+1]] += "T"+(cntrPds);
+        for (int i=0; i< startPadsX.length;i++){
+            vis[startPadsX[i]][startPadsY[i]] += "F"+cntrPds;
+            vis[finishPadsX[i]][finishPadsY[i]] += "T"+(cntrPds);
             cntrPds++;
         }
         for (int i=0; i< hostagesX.length;i++){
-            vis[hostagesX[i]][hostagesY[i]] += String.format("H(%d)", damages[i]);
+            vis[hostagesX[i]][hostagesY[i]] += String.format("H(%d)", hostagesDamage[i]);
         }
 
         // Printing the state of the grid
-        int cellMaxSize = 15;
-        String strf = "%-"+cellMaxSize+"s ";
+        int cellMaxSize = 8;
+        String strf = "%-"+cellMaxSize+"s | ";
+        String line = "";
+        for (int i=0;i<(N+1)*(cellMaxSize+3)-1;i++) line+="-";
         for (int j=-1;j<N;j++){
             System.out.printf(strf, j);
         }
         System.out.println();
+        System.out.println(line);
         for (int i=0;i<M;i++){
             System.out.printf(strf, i);
             for (int j=0;j<N;j++){
                 System.out.printf(strf, vis[i][j]);
             }
             System.out.println();
+            System.out.println(line);
         }
+    }
+
+    boolean goalTest(State state){
+        if (state.neoDamage >=100)
+            return false;
+        for (int i=0; i<state.hostagesX.length; i++){
+            int x = state.hostagesX[i];
+            int y = state.hostagesY[i];
+            int damage = state.hostagesDamage[i];
+            if (damage<100 && (x!=telephoneX || y!=telephoneY))
+                return false;
+        }
+        return true;
     }
 
     public static void main(String[] args) {
 //        String p1 = "14,5;2;7,0;2,3;8,3,8,1,9,2,2,0;8,3,9,1,0,4,6,1;2,0,10,1,10,1,2,0;6,2,76,7,2,78,0,0,55,11,2,11,4,4,90,2,4,56,0,2,21,13,2,63,12,3,85,1,2,26";
         String problem = genGrid();
         System.out.println(problem);
-        visualize(problem);
+        Matrix mat = new Matrix();
+        State initialState = mat.parseProblem(problem);
+        mat.visualize(initialState);;
     }
 }
