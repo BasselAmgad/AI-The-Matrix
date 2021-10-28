@@ -201,6 +201,9 @@ public class Matrix extends SearchProblem {
 
 
     static String solve(String grid, String strategy, boolean visualize) {
+        String initialState = ProblemParser.parseProblem(grid);
+        // TODO: Create root node and (enqueue) it
+        // TODO: Start expanding the nodes with actions
         return "";
     }
 
