@@ -204,6 +204,7 @@ public class Matrix extends SearchProblem {
         return "";
     }
 
+    // TODO: Visualise works with  String state
     void visualize(State currentState) {
         int neoX = currentState.neoX;
         int neoY = currentState.neoY;
@@ -260,17 +261,9 @@ public class Matrix extends SearchProblem {
         }
     }
 
-    boolean goalTest(State state) {
-        if (state.neoDamage >= 100)
-            return false;
-        for (int i = 0; i < state.hostagesX.length; i++) {
-            int x = state.hostagesX[i];
-            int y = state.hostagesY[i];
-            int damage = state.hostagesDamage[i];
-            if (damage < 100 && (x != MatrixConfig.telephoneX || y != MatrixConfig.telephoneY))
-                return false;
-        }
-        return true;
+    // the goal test should take the variables directly and return false or true, no need for the string state?
+    static boolean goalTest(String state) {
+        return false;
     }
 
     public static void main(String[] args) {
@@ -278,10 +271,11 @@ public class Matrix extends SearchProblem {
 //      String p1 = "14,5;2;7,0;2,3;8,3,8,1,9,2,2,0;8,3,9,1,0,4,6,1;2,0,10,1,10,1,2,0;6,2,76,7,2,78,0,0,55,11,2,11,4,4,90,2,4,56,0,2,21,13,2,63,12,3,85,1,2,26";
         for (int i = 0; i < 10; i++) {
             String problem = genGrid();
-            System.out.println(problem);
-            Matrix mat = new Matrix();
-            State initialState = mat.parseProblem(problem);
-            mat.visualize(initialState);
+//            System.out.println(problem);
+//            Matrix mat = new Matrix();
+            solve(problem, "", false);
+           // State initialState = ProblemParser.parseProblem(problem);
+           // mat.visualize(initialState);
         }
     }
 }
@@ -299,9 +293,7 @@ agents      1:inf                   INF -> free
 
 
 /*
-
-M,N;
-C;
+------------------------------------------------------------------STATE STRING------------------------------------------
 NeoX,NeoY;
 TelephoneX,TelephoneY;
 countOfKilledAgents;
