@@ -1,20 +1,19 @@
 package code;
 
-public abstract class Node {
+public class Node {
+    //TODO: change Node class back to be abstract
 
-    State state;
+    String state;
     Node parent;
     Action action;
     int depth;
     int pathCost; // ?
-    int timepnt;
 
-    public Node(State state, Node parent, Action action, int depth, int pathCost, int timepnt) {
+    public Node(String state, Node parent, Action action, int depth, int pathCost) {
         this.state = state;
         this.parent = parent;
         this.action = action;
         this.depth = depth;
         this.pathCost = pathCost;
-        this.timepnt = timepnt;
     }
 }

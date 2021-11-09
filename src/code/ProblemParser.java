@@ -3,7 +3,7 @@ package code;
 public final class ProblemParser {
 
     public static String parseProblem(String problem) {
-        String[] entries = problem.split(";");
+        String[] entries = problem.split(";", -1);
 
         String[] dims = entries[0].split(",");
         short M = Short.parseShort(dims[0]);
@@ -14,6 +14,7 @@ public final class ProblemParser {
         String[] neo = entries[2].split(",");
         int neoX = Integer.parseInt(neo[0]);
         int neoY = Integer.parseInt(neo[1]);
+        int neoDamage = 0;
 
         String[] tel = entries[3].split(",");
         short telephoneX = Short.parseShort(tel[0]);
@@ -56,7 +57,7 @@ public final class ProblemParser {
         MatrixConfig.finishPadsY = finishPadsY;
 
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("%d,%d;", neoX, neoY));
+        sb.append(String.format("%d,%d,%d;", neoX, neoY, neoDamage));
         sb.append(String.format("%d;", countKilled));
         sb.append(String.join(",", agents)).append(";");
         sb.append(String.join(",", pills)).append(";");
