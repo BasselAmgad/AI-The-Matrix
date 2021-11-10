@@ -1,5 +1,6 @@
 package code;
 
+import java.util.ArrayList;
 import java.util.PriorityQueue;
 
 public class Matrix extends SearchProblem {
@@ -132,14 +133,12 @@ public class Matrix extends SearchProblem {
     }
 
     static String solve(String grid, String strategy, boolean visualize) {
+        MatrixConfig.visualize = visualize;
         String initialState = ProblemParser.parseProblem(grid);
         // TODO: Create root node and (enqueue) it
         Node root = new Node(initialState, null, null, 0, 0);
-        if (visualize) {
-            System.out.println("Initial State Visualizing");
-            visualize(root.state);
-        }
         // TODO: Start expanding the nodes with actions
+
         return "";
     }
 
@@ -149,15 +148,18 @@ public class Matrix extends SearchProblem {
         visualize(new State(currentState));
     }
     static void visualize(State currentState) {
+        if (!MatrixConfig.visualize)
+            return;
+        System.out.println("Initial State Visualizing");
         int neoX = currentState.neoX;
         int neoY = currentState.neoY;
-        int[] pillsX = currentState.pillsX;
-        int[] pillsY = currentState.pillsY;
-        int[] agentsX = currentState.agentsX;
-        int[] agentsY = currentState.agentsY;
-        int[] hostagesX = currentState.hostagesX;
-        int[] hostagesY = currentState.hostagesY;
-        int[] hostagesDamage = currentState.hostagesDamage;
+        ArrayList<Integer> pillsX = currentState.pillsX;
+        ArrayList<Integer> pillsY = currentState.pillsY;
+        ArrayList<Integer> agentsX = currentState.agentsX;
+        ArrayList<Integer> agentsY = currentState.agentsY;
+        ArrayList<Integer> hostagesX = currentState.hostagesX;
+        ArrayList<Integer> hostagesY = currentState.hostagesY;
+        ArrayList<Integer> hostagesDamage = currentState.hostagesDamage;
 
         // Preparing to print the state of the grid
         String[][] vis = new String[MatrixConfig.M][MatrixConfig.N];
@@ -168,11 +170,11 @@ public class Matrix extends SearchProblem {
         }
         vis[neoX][neoY] += "N";
         vis[MatrixConfig.telephoneX][MatrixConfig.telephoneY] += "T";
-        for (int i = 0; i < pillsX.length; i++) {
-            vis[pillsX[i]][pillsY[i]] += "L";
+        for (int i = 0; i < pillsX.size(); i++) {
+            vis[pillsX.get(i)][pillsY.get(i)] += "L";
         }
-        for (int i = 0; i < agentsX.length; i++) {
-            vis[agentsX[i]][agentsY[i]] += "A";
+        for (int i = 0; i < agentsX.size(); i++) {
+            vis[agentsX.get(i)][agentsY.get(i)] += "A";
         }
         int cntrPds = 0;
         for (int i = 0; i < MatrixConfig.startPadsX.length; i++) {
@@ -180,8 +182,8 @@ public class Matrix extends SearchProblem {
             vis[MatrixConfig.finishPadsX[i]][MatrixConfig.finishPadsY[i]] += "T" + (cntrPds);
             cntrPds++;
         }
-        for (int i = 0; i < hostagesX.length; i++) {
-            vis[hostagesX[i]][hostagesY[i]] += String.format("H(%d)", hostagesDamage[i]);
+        for (int i = 0; i < hostagesX.size(); i++) {
+            vis[hostagesX.get(i)][hostagesY.get(i)] += String.format("H(%d)", hostagesDamage.get(i));
         }
 
         // Printing the state of the grid
@@ -240,6 +242,6 @@ AgentX1,AgentY1, ...,AgentXk,AgentYk;
 PillX1,PillY1, ...,PillXg,PillYg;
 countOfDeadHostages;
 HostageX1,HostageY1,HostageDamage1, ...,HostageXw,HostageYw,HostageDamagew;
-carriedX1,carriedY1,carriedDamage1, ...,carriedXu,carriedYu,carriedDamageu;
+carriedDamage1, ...,carriedDamageu;
 mutatedX1,mutatedY1, ...,mutatedXv,mutatedYv
  */

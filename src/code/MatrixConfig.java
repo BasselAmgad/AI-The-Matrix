@@ -10,4 +10,6 @@ public final class MatrixConfig {
     public static int carryCapacity; // <=4
 
     public static int[] startPadsX, startPadsY, finishPadsX, finishPadsY;
+
+    public static boolean visualize;
 }
