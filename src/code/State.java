@@ -237,6 +237,7 @@ public class State {
                     i++;
                 }
             }
+            i=0;
             while (i < mutatedX.size()) {
                 if (mutatedX.get(i) == x & mutatedY.get(i) == y) {
                     mutatedX.remove(i);
@@ -255,6 +256,10 @@ public class State {
                 return new StateResult.None();
             }
         }
+        else{
+            return new StateResult.None();
+        }
+        increaseHostagesDamage();
         return new StateResult.NewState(this.decodeState());
     }
 
@@ -266,6 +271,11 @@ public class State {
                     //All hostages remaining in hostagesX, hostagesY, hostagesDamage are still alive
                     int oldDamage = hostagesDamage.get(j);
                     hostagesDamage.set(j, oldDamage - 20);
+                }
+                for (int j = 0; j < carriedDamage.size(); j++) {
+                    //All carried remaining in carriedX, carriedY, carriedDamage are still alive
+                    int oldDamage = carriedDamage.get(j);
+                    carriedDamage.set(j, oldDamage - 20);
                 }
                 return new StateResult.NewState(this.decodeState());
             }

@@ -217,6 +217,9 @@ public class Matrix extends SearchProblem {
         ArrayList<Integer> hostagesX = currentState.hostagesX;
         ArrayList<Integer> hostagesY = currentState.hostagesY;
         ArrayList<Integer> hostagesDamage = currentState.hostagesDamage;
+        ArrayList<Integer> carriedDamage = currentState.carriedDamage;
+        ArrayList<Integer> mutatedX = currentState.mutatedX;
+        ArrayList<Integer> mutatedY = currentState.mutatedY;
 
         // Preparing to print the state of the grid
         String[][] vis = new String[MatrixConfig.M][MatrixConfig.N];
@@ -228,7 +231,7 @@ public class Matrix extends SearchProblem {
         vis[neoX][neoY] += "N";
         vis[MatrixConfig.telephoneX][MatrixConfig.telephoneY] += "T";
         for (int i = 0; i < pillsX.size(); i++) {
-            vis[pillsX.get(i)][pillsY.get(i)] += "L";
+            vis[pillsX.get(i)][pillsY.get(i)] += "P";
         }
         for (int i = 0; i < agentsX.size(); i++) {
             vis[agentsX.get(i)][agentsY.get(i)] += "A";
@@ -242,6 +245,13 @@ public class Matrix extends SearchProblem {
         for (int i = 0; i < hostagesX.size(); i++) {
             vis[hostagesX.get(i)][hostagesY.get(i)] += String.format("H(%d)", hostagesDamage.get(i));
         }
+        for (int i = 0; i < carriedDamage.size(); i++) {
+            vis[neoX][neoY] += String.format("C(%d)", carriedDamage.get(i));
+        }
+        for (int i = 0; i < mutatedY.size(); i++) {
+            vis[mutatedX.get(i)][mutatedY.get(i)] += "M";
+        }
+
 
         // Printing the state of the grid
         int cellMaxSize = 8;
@@ -261,11 +271,13 @@ public class Matrix extends SearchProblem {
             System.out.println();
             System.out.println(line);
         }
+        System.out.printf("#Dead=%d\t#Killed=%d\tneo Damage=%d\n", currentState.countDead, currentState.countKilled, currentState.neoDamage);
     }
 
     // the goal test should take the variables directly and return false or true, no need for the string state?
     static boolean goalTest(State state) {
-        return state.hostagesDamage.size() == 0 && state.carriedDamage.size() == 0 && state.mutatedX.size() == 0;
+        return state.neoX == MatrixConfig.telephoneX && state.neoY==MatrixConfig.telephoneY &&
+                state.hostagesDamage.size() == 0 && state.carriedDamage.size() == 0 && state.mutatedX.size() == 0;
     }
 
 
