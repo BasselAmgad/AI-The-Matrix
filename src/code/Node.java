@@ -5,14 +5,14 @@ public class Node {
 
     String state;
     Node parent;
-    Action action;
+    Operator operator;
     int depth;
     int pathCost; // ?
 
-    public Node(String state, Node parent, Action action, int depth, int pathCost) {
+    public Node(String state, Node parent, Operator operator, int depth, int pathCost) {
         this.state = state;
         this.parent = parent;
-        this.action = action;
+        this.operator = operator;
         this.depth = depth;
         this.pathCost = pathCost;
     }

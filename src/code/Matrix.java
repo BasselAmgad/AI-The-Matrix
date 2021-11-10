@@ -1,38 +1,79 @@
 package code;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.PriorityQueue;
 
 public class Matrix extends SearchProblem {
-
-//    String Search(State initialState) {
-//        PriorityQueue<Node> queue = new PriorityQueue<>();
-//        Node root = new BST_Node(initialState, null, null, 0, 0);
-//        queue.add(root);
-//        while (!queue.isEmpty()) {
-//            Node node = queue.remove();
-//            if (goalTest(node.state)) {
-//                visualize(node.state);
-//                return "Found a solution here";
-//            } else {//Expansion
-//                expand(queue, node);
-//            }
-//        }
-//        return "";
-//    }
-
-    void expand(PriorityQueue<Node> queue, Node node) {
-
+    public Matrix(String problem){
+        this.initialState = ProblemParser.parseProblem(problem);
+        this.operators = Action.values();
+        System.out.println(Arrays.toString(operators));
     }
+    @Override
+    public boolean goalTestFUnction(State state) {
+        return state.neoX == MatrixConfig.telephoneX && state.neoY==MatrixConfig.telephoneY &&
+                state.hostagesDamage.size() == 0 && state.carriedDamage.size() == 0 && state.mutatedX.size() == 0;
+    }
+
+//    @Override
+//    public int pathCostFUnction(Operator operator) {
+//        Action action = (Action) operator;
+//        if (action==Action.KILL)
+//            return 30;
+//        else if (action==Action.CARRY)
+//            return 8;
+//        else if (action==Action.UP || action==Action.DOWN || action==Action.RIGHT || action==Action.LEFT)
+//            return 4;
+//        else if (action==Action.FLY)
+//            return 3;
+//        else if (action==Action.DROP)
+//            return 1;
+//        else if(action== Action.TAKE_PILL)
+//            return 2;
+//        return 0;
+//    }
+    @Override
+    public int pathCostFUnction(String stateString) {
+        State state = new State(stateString);
+        return 1000*(state.countDead*250 + state.countKilled);
+    }
+
+    @Override
+    public String problemOutput(Node goal) {
+        State state = new State(goal.state);
+        String plan = String.join(",", constructPlan(goal));
+        return plan+";"+state.countDead +";" + state.countKilled +";" + this.expandedNodesCnt;
+    }
+    public int heuristic_1(Node node){
+        State state = new State(node.state);
+        int sum = 0;
+        for (int i=0;i <state.hostagesDamage.size(); i++){
+            sum += state.hostagesDamage.get(i);
+        }
+        return sum;
+    }
+    public int heuristic_2(Node node){
+        State state = new State(node.state);
+        int totEst = 0;
+        for (int i=0;i <state.hostagesDamage.size(); i++){
+            int hx = state.hostagesX.get(i);
+            int hy = state.hostagesY.get(i);
+            int hd = state.hostagesDamage.get(i);
+            int tx = MatrixConfig.telephoneX;
+            int ty = MatrixConfig.telephoneY;
+            int distance = (int)(Math.abs(hx-tx)+Math.abs(hy-ty));
+            totEst += hd * distance;
+        }
+        return  totEst;
+    }
+
+
 
     static String genGrid() {
         StringBuilder sb = new StringBuilder();
         int M = 5 + (int) (Math.random() * 11);
         int N = 5 + (int) (Math.random() * 11);
-//        int M = 5;
-//        int N = 5;
         boolean[][] taken = new boolean[M][N];
         int carryCapacity = 1 + (int) (Math.random() * 4);
         int n_free_cells = M * N;
@@ -135,79 +176,30 @@ public class Matrix extends SearchProblem {
     }
 
     static String solve(String grid, String strategy, boolean visualize) {
+        Matrix matrix = new Matrix(grid);
         MatrixConfig.visualize = visualize;
-        String initialState = ProblemParser.parseProblem(grid);
-        System.out.println("Initial state stateString: ");
-        System.out.println(initialState);
-        // TODO: Create root node and (enqueue) it
-        HashSet<String> visitedStates = new HashSet<>();
-        Node root = new Node(initialState, null, null, 0, 0);
-        // TODO: Start expanding the nodes with actions
-
-        //BFS
-        PriorityQueue<Node> queue = new PriorityQueue<>(Comparator.comparingInt(node -> node.depth));
-        //DFS
-//        PriorityQueue<Node> queue = new PriorityQueue<>(Comparator.comparingInt(node -> -node.depth));
-        queue.add(root);
-        int expandedNodesCnt = 0;
-        while (!queue.isEmpty()) {
-            Node currentNode = queue.poll();
-            expandedNodesCnt++;
-//            visualize(currentNode.state);
-            State state = new State(currentNode.state);
-            ;
-            if (goalTest(state)) {
-                String result = String.format("Reached Goal ^_^\n# Expanded Nodes: %d\nDeaths: %d\nKills: %d\n", expandedNodesCnt, state.countDead, state.countKilled);
-                traceBack(currentNode);
-                return result;
-            }
-            state = new State(currentNode.state);
-            StateResult up = state.up();
-            state = new State(currentNode.state);
-            StateResult down = state.down();
-            state = new State(currentNode.state);
-            StateResult left = state.left();
-            state = new State(currentNode.state);
-            StateResult right = state.right();
-            state = new State(currentNode.state);
-            StateResult carry = state.carry();
-            state = new State(currentNode.state);
-            StateResult drop = state.drop();
-            state = new State(currentNode.state);
-            StateResult kill = state.kill();
-            state = new State(currentNode.state);
-            StateResult takePill = state.takePill();
-            state = new State(currentNode.state);
-            StateResult fly = state.fly();
-            StateResult[] expansions = new StateResult[]{up, down, left, right, carry, drop, kill, takePill, fly};
-            Action[] operators = new Action[]{Action.UP, Action.DOWN, Action.RIGHT, Action.LEFT, Action.CARRY, Action.DROP, Action.KILL, Action.TAKE_PILL, Action.FLY};
-            for (int i = 0; i < expansions.length; i++) {
-                StateResult exp = expansions[i];
-                if (exp instanceof StateResult.NewState) {
-                    String stateString = ((StateResult.NewState) exp).getResult();
-                    if (!visitedStates.contains(stateString)) {
-                        visitedStates.add(stateString);
-                        Node newNode = new Node(stateString, currentNode, operators[i], currentNode.depth + 1, 0);
-                        queue.add(newNode);
-                    }
-                }
-            }
+        Comparator<Node> chosenStrategy;
+        switch(SearchStrategy.parse(strategy)) {
+            case BF: chosenStrategy = Comparator.comparingInt(node -> node.depth); break;
+            case DF: chosenStrategy = Comparator.comparingInt(node -> -node.depth); break;
+            case UC: chosenStrategy = Comparator.comparingInt(node -> node.pathCost); break;
+            //case ID:
+            case GR1: chosenStrategy = Comparator.comparingInt(node -> matrix.heuristic_1(node)); break;
+            case GR2: chosenStrategy = Comparator.comparingInt(node -> matrix.heuristic_2(node)); break;
+            case AS1: chosenStrategy = Comparator.comparingInt(node -> node.pathCost + matrix.heuristic_1(node)); break;
+            case AS2: chosenStrategy = Comparator.comparingInt(node -> node.pathCost + matrix.heuristic_2(node)); break;
+            default: chosenStrategy = Comparator.comparingInt(node -> -node.depth);; //Let DFS be the default
         }
-        visualize(root.state);
 
-        return "";
+        return matrix.searchProcedure(chosenStrategy);
     }
 
-    // TODO: Visualise works with  String state;
-    // did it temporarily like that; need to discuss where visualize is called so that unnecessary conversions are done
     static void visualize(String currentState) {
         visualize(new State(currentState));
     }
-
     static void visualize(State currentState) {
         if (!MatrixConfig.visualize)
             return;
-        System.out.println("Initial State Visualizing");
         int neoX = currentState.neoX;
         int neoY = currentState.neoY;
         ArrayList<Integer> pillsX = currentState.pillsX;
@@ -217,6 +209,10 @@ public class Matrix extends SearchProblem {
         ArrayList<Integer> hostagesX = currentState.hostagesX;
         ArrayList<Integer> hostagesY = currentState.hostagesY;
         ArrayList<Integer> hostagesDamage = currentState.hostagesDamage;
+        ArrayList<Integer> carriedDamage = currentState.carriedDamage;
+        ArrayList<Integer> mutatedX = currentState.mutatedX;
+        ArrayList<Integer> mutatedY = currentState.mutatedY;
+
 
         // Preparing to print the state of the grid
         String[][] vis = new String[MatrixConfig.M][MatrixConfig.N];
@@ -228,7 +224,7 @@ public class Matrix extends SearchProblem {
         vis[neoX][neoY] += "N";
         vis[MatrixConfig.telephoneX][MatrixConfig.telephoneY] += "T";
         for (int i = 0; i < pillsX.size(); i++) {
-            vis[pillsX.get(i)][pillsY.get(i)] += "L";
+            vis[pillsX.get(i)][pillsY.get(i)] += "P";
         }
         for (int i = 0; i < agentsX.size(); i++) {
             vis[agentsX.get(i)][agentsY.get(i)] += "A";
@@ -241,6 +237,12 @@ public class Matrix extends SearchProblem {
         }
         for (int i = 0; i < hostagesX.size(); i++) {
             vis[hostagesX.get(i)][hostagesY.get(i)] += String.format("H(%d)", hostagesDamage.get(i));
+        }
+        for (int i = 0; i < carriedDamage.size(); i++) {
+            vis[neoX][neoY] += String.format("C(%d)", carriedDamage.get(i));
+        }
+        for (int i = 0; i < mutatedY.size(); i++) {
+            vis[mutatedX.get(i)][mutatedY.get(i)] += "M";
         }
 
         // Printing the state of the grid
@@ -261,41 +263,46 @@ public class Matrix extends SearchProblem {
             System.out.println();
             System.out.println(line);
         }
+        System.out.printf("#Dead=%d\t#Killed=%d\tneo Damage=%d\n", currentState.countDead, currentState.countKilled, currentState.neoDamage);
     }
 
-    // the goal test should take the variables directly and return false or true, no need for the string state?
-    static boolean goalTest(State state) {
-        return state.hostagesDamage.size() == 0 && state.carriedDamage.size() == 0 && state.mutatedX.size() == 0;
-    }
+//    // the goal test should take the variables directly and return false or true, no need for the string state?
+//    static boolean goalTest(State state) {
+//        return state.hostagesDamage.size() == 0 && state.carriedDamage.size() == 0 && state.mutatedX.size() == 0;
+//    }
 
 
-    static void traceBack(Node node) {
-        Node current = node;
-        Action action = node.action;
-        while (current.parent != null) {
-//            visualize(current.state);
-            System.out.println(action);
-            current = current.parent;
-            action = current.action;
-        }
-        visualize(current.state);
-    }
 
     public static void main(String[] args) {
         System.out.println("Hello world");
 //      String p1 = "14,5;2;7,0;2,3;8,3,8,1,9,2,2,0;8,3,9,1,0,4,6,1;2,0,10,1,10,1,2,0;6,2,76,7,2,78,0,0,55,11,2,11,4,4,90,2,4,56,0,2,21,13,2,63,12,3,85,1,2,26";
-        //String problem = "3,3;1;2,2;1,2;;;;2,0,88";
+//        String problem = "3,3;1;2,2;1,2;;;;2,0,88";
         //String problem = "3,3;1;2,2;1,2;;;;2,0,84";
         //String problem = "3,3;1;2,2;1,2;2,1;;;2,0,80";
 //        String problem = "3,3;1;2,2;1,2;2,1,1,1;;;2,0,80";
+
         String problem = "5,5;2;0,4;1,4;0,1,1,1,2,1,3,1,3,3,3,4;1,0,2,4;0,3,4,3,4,3,0,3;0,0,30,3,0,80,4,4,80";
-
         //String problem = "3,3;1;2,2;1,2;;;;2,0,0";
-        //String problem = genGrid();
-        System.out.println("Gengrid Output:\n" + problem);
-        System.out.println(solve(problem, "", true));
+//        String problem = "11,5;1;9,3;2,4;0,2,7,3,3,4,5,0,1,3,3,2,7,4;1,4,9,4,2,3;9,0,8,3,8,3,9,0,2,2,10,3,10,3,2,2,2,1,1,0,1,0,2,1,6,2,6,1,6,1,6,2,4,4,7,0,7,0,4,4,4,2,0,4,0,4,4,2,5,3,0,1,0,1,5,3,7,2,5,2,5,2,7,2,9,2,10,2,10,2,9,2,9,1,4,0,4,0,9,1,0,0,8,4,8,4,0,0,6,3,1,1,1,1,6,3,4,3,5,4,5,4,4,3,3,3,3,1,3,1,3,3,8,2,10,1,10,1,8,2;2,0,24,6,4,18,3,0,58,10,0,45,5,1,51,6,0,79,8,1,96,0,3,34";
+//        String problem = genGrid();
 
+        System.out.println("Gengrid Output:\n" + problem);
+//        System.out.println(solve(problem, "DF", true));
+//        for (int i=0; i<SearchStrategy.values().length; i++){
+//            SearchStrategy ss = SearchStrategy.values()[i];
+//            if (ss.toString()=="AD" || ss.toString()=="BF")continue;;
+//            System.out.println(ss);;
+//            System.out.println(solve(problem, ss.toString(), false));
+//        }
+        String s = "DF";
+        System.out.println(s);;
+        System.out.println(solve(problem, s, true));
+
+
+//        System.out.println(solve(problem, "UC", false));
     }
+
+
 }
 
 /*

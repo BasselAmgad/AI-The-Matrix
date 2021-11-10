@@ -11,7 +11,6 @@ public class State {
     int countDead;
     ArrayList<Integer> hostagesX, hostagesY, hostagesDamage;
     ArrayList<Integer> carriedDamage;
-    //removed carriedX, carriedY because the last updates in the description made them unnecessary
     ArrayList<Integer> mutatedX, mutatedY;
 
     public String decodeState() {
@@ -132,7 +131,6 @@ public class State {
                 mutatedX.add(hostagesX.remove(i));
                 mutatedY.add(hostagesY.remove(i));
                 hostagesDamage.remove(i);
-                //TODO: increment countDead here or when the mutated hostage gets killed
             } else {
                 hostagesDamage.set(i, damage + 2);
                 i++;
@@ -155,135 +153,4 @@ public class State {
             i++;
         }
     }
-
-    public StateResult up() {
-        if (neoX != 0 && !doesAgentExist(neoX - 1, neoY)) {
-            neoX--;
-            increaseHostagesDamage();
-            return new StateResult.NewState(this.decodeState());
-        }
-        return new StateResult.None();
-    }
-
-    public StateResult down() {
-        if (neoX != MatrixConfig.M - 1 && !doesAgentExist(neoX + 1, neoY)) {
-            neoX++;
-            increaseHostagesDamage();
-            return new StateResult.NewState(this.decodeState());
-        }
-        return new StateResult.None();
-    }
-
-    public StateResult right() {
-        if (neoY != MatrixConfig.N - 1 && !doesAgentExist(neoX, neoY + 1)) {
-            neoY++;
-            increaseHostagesDamage();
-            return new StateResult.NewState(this.decodeState());
-        }
-        return new StateResult.None();
-    }
-
-    public StateResult left() {
-        if (neoY != 0 && !doesAgentExist(neoX, neoY - 1)) {
-            neoY--;
-            increaseHostagesDamage();
-            return new StateResult.NewState(this.decodeState());
-        }
-        return new StateResult.None();
-    }
-
-    public StateResult carry() {
-        if (carriedDamage.size() == MatrixConfig.carryCapacity)
-            return new StateResult.None();
-
-        int i = 0;
-        while (i < hostagesX.size()) {
-            if (hostagesX.get(i) == neoX && hostagesY.get(i) == neoY) {
-                hostagesX.remove(i);
-                hostagesY.remove(i);
-                carriedDamage.add(hostagesDamage.remove(i));
-                increaseHostagesDamage();
-                return new StateResult.NewState(this.decodeState());
-            }
-            i++;
-        }
-        return new StateResult.None();
-    }
-
-    public StateResult drop() {
-        if (neoX == MatrixConfig.telephoneX && neoY == MatrixConfig.telephoneY
-                && carriedDamage.size() > 0) {
-            carriedDamage = new ArrayList<>();
-            return new StateResult.NewState(this.decodeState());
-        }
-        return new StateResult.None();
-    }
-
-    public StateResult kill() {
-        int[] dx = new int[]{-1, 0, 1, 0};
-        int[] dy = new int[]{0, -1, 0, 1};
-        boolean isFound = false;
-        for (int move = 0; move < dx.length; move++) {
-            int x = neoX + dx[move];
-            int y = neoY + dy[move];
-            int i = 0;
-            while (i < agentsX.size()) {
-                if (agentsX.get(i) == x & agentsY.get(i) == y) {
-                    agentsX.remove(i);
-                    agentsY.remove(i);
-                    countKilled++;
-                    isFound = true;
-                } else {
-                    i++;
-                }
-            }
-            while (i < mutatedX.size()) {
-                if (mutatedX.get(i) == x & mutatedY.get(i) == y) {
-                    mutatedX.remove(i);
-                    mutatedY.remove(i);
-                    countKilled++;
-                    countDead++;
-                    isFound = true;
-                } else {
-                    i++;
-                }
-            }
-        }
-        if (isFound) {
-            neoDamage = Math.min(100, neoDamage + 20);
-            if (neoDamage == 100) {
-                return new StateResult.None();
-            }
-        }
-        return new StateResult.NewState(this.decodeState());
-    }
-
-    public StateResult takePill() {
-        for (int i = 0; i < pillsX.size(); i++) {
-            if (pillsX.get(i) == neoX && pillsY.get(i) == neoY) {
-                neoDamage = Math.max(0, neoDamage - 20);
-                for (int j = 0; j < hostagesDamage.size(); j++) {
-                    //All hostages remaining in hostagesX, hostagesY, hostagesDamage are still alive
-                    int oldDamage = hostagesDamage.get(j);
-                    hostagesDamage.set(j, oldDamage - 20);
-                }
-                return new StateResult.NewState(this.decodeState());
-            }
-        }
-        return new StateResult.None();
-    }
-
-    public StateResult fly() {
-        for (int i = 0; i < MatrixConfig.startPadsX.length; i++) {
-            if (MatrixConfig.startPadsX[i] == neoX && MatrixConfig.startPadsY[i] == neoY) {
-                neoX = MatrixConfig.finishPadsX[i];
-                neoY = MatrixConfig.finishPadsY[i];
-                increaseHostagesDamage();
-                return new StateResult.NewState(this.decodeState());
-            }
-        }
-        return new StateResult.None();
-    }
-
-
 }

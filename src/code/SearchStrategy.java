@@ -1,5 +1,7 @@
 package code;
 
+import java.util.Comparator;
+
 /*
  * An enum used to parse a search strategy string to.
  */
