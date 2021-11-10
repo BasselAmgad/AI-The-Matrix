@@ -109,8 +109,8 @@ public class State {
         this.mutatedX = new ArrayList<>(numMutated);
         this.mutatedY = new ArrayList<>(numMutated);
         for (int i = 0; i < numMutated; i++) {
-            mutatedX.add(i, Integer.parseInt(mutated[i * 3]));
-            mutatedY.add(i, Integer.parseInt(mutated[i * 3 + 1]));
+            mutatedX.add(i, Integer.parseInt(mutated[i * 2]));
+            mutatedY.add(i, Integer.parseInt(mutated[i * 2 + 1]));
         }
     }
 

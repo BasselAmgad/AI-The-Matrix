@@ -143,7 +143,11 @@ public class Matrix extends SearchProblem {
         HashSet<String> visitedStates = new HashSet<>();
         Node root = new Node(initialState, null, null, 0, 0);
         // TODO: Start expanding the nodes with actions
+
+        //BFS
         PriorityQueue<Node> queue = new PriorityQueue<>(Comparator.comparingInt(node -> node.depth));
+        //DFS
+//        PriorityQueue<Node> queue = new PriorityQueue<>(Comparator.comparingInt(node -> -node.depth));
         queue.add(root);
         int expandedNodesCnt = 0;
         while (!queue.isEmpty()) {
@@ -162,21 +166,21 @@ public class Matrix extends SearchProblem {
             state = new State(currentNode.state);
             StateResult down = state.down();
             state = new State(currentNode.state);
-            StateResult right = state.right();
-            state = new State(currentNode.state);
             StateResult left = state.left();
+            state = new State(currentNode.state);
+            StateResult right = state.right();
             state = new State(currentNode.state);
             StateResult carry = state.carry();
             state = new State(currentNode.state);
             StateResult drop = state.drop();
             state = new State(currentNode.state);
             StateResult kill = state.kill();
-//            state = new State(currentNode.state);
-//            StateResult takePill = state.takePill();
-//            state = new State(currentNode.state);
-//            StateResult fly = state.fly();
-            StateResult[] expansions = new StateResult[]{up, down, right, left, carry, drop, kill};//, takePill, fly};
-            Action[] operators = new Action[]{Action.UP, Action.DOWN, Action.RIGHT, Action.LEFT, Action.CARRY, Action.DROP, Action.KILL};//, Action.TAKE_PILL, Action.FLY};
+            state = new State(currentNode.state);
+            StateResult takePill = state.takePill();
+            state = new State(currentNode.state);
+            StateResult fly = state.fly();
+            StateResult[] expansions = new StateResult[]{up, down, left, right, carry, drop, kill, takePill, fly};
+            Action[] operators = new Action[]{Action.UP, Action.DOWN, Action.RIGHT, Action.LEFT, Action.CARRY, Action.DROP, Action.KILL, Action.TAKE_PILL, Action.FLY};
             for (int i = 0; i < expansions.length; i++) {
                 StateResult exp = expansions[i];
                 if (exp instanceof StateResult.NewState) {
@@ -269,7 +273,7 @@ public class Matrix extends SearchProblem {
         Node current = node;
         Action action = node.action;
         while (current.parent != null) {
-            visualize(current.state);
+//            visualize(current.state);
             System.out.println(action);
             current = current.parent;
             action = current.action;
@@ -283,7 +287,9 @@ public class Matrix extends SearchProblem {
         //String problem = "3,3;1;2,2;1,2;;;;2,0,88";
         //String problem = "3,3;1;2,2;1,2;;;;2,0,84";
         //String problem = "3,3;1;2,2;1,2;2,1;;;2,0,80";
-        String problem = "3,3;1;2,2;1,2;2,1,1,1;;;2,0,80";
+//        String problem = "3,3;1;2,2;1,2;2,1,1,1;;;2,0,80";
+        String problem = "5,5;2;0,4;1,4;0,1,1,1,2,1,3,1,3,3,3,4;1,0,2,4;0,3,4,3,4,3,0,3;0,0,30,3,0,80,4,4,80";
+
         //String problem = "3,3;1;2,2;1,2;;;;2,0,0";
         //String problem = genGrid();
         System.out.println("Gengrid Output:\n" + problem);
