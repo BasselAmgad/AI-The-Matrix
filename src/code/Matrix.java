@@ -267,9 +267,14 @@ public class Matrix extends SearchProblem {
         com.sun.management.OperatingSystemMXBean oss= (com.sun.management.OperatingSystemMXBean)ManagementFactory.getOperatingSystemMXBean();
         String problem = "5,5;2;0,4;1,4;0,1,1,1,2,1,3,1,3,3,3,4;1,0,2,4;0,3,4,3,4,3,0,3;0,0,30,3,0,80,4,4,80";
         System.out.println("Hello "+oss.getProcessCpuLoad());
-        String s = "DF";
+        String s;
+        long t0;
+
+        t0 = System.nanoTime();
+        s = "DF";
         System.out.println(s);;
-        System.out.println(solve(problem, s, true));
+        System.out.println(solve(problem, s, false));
+        System.out.println("Time taken: "+ (System.nanoTime()-t0)/1e9);
         System.out.println("CPU Utilization: "+String.format("%.02f", oss.getProcessCpuLoad()*100)+"%");
         long total=(oss.getTotalPhysicalMemorySize());
         long free=oss.getFreePhysicalMemorySize();

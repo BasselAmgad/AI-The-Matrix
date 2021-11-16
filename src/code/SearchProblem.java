@@ -37,7 +37,8 @@ public abstract class SearchProblem {
     }
     public String DepthLimitedSearch(int limit){
         this.visitedStates = new HashSet<>();
-        this.expandedNodesCnt = 0;
+        if (limit==0)
+            this.expandedNodesCnt = 0;
         PriorityQueue<Node> queue = new PriorityQueue<>(Comparator.comparingInt(node -> -node.depth));
 
         Node root = new Node(initialState, null, null, 0, 0);
