@@ -1,10 +1,15 @@
 package code;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.lang.management.ManagementFactory;
 
 public class Matrix extends SearchProblem {
+
+
     public Matrix(String problem){
         this.initialState = ProblemParser.parseProblem(problem);
         this.operators = Action.values();
@@ -259,12 +264,16 @@ public class Matrix extends SearchProblem {
 
     public static void main(String[] args) {
         System.out.println("Hello world");
-
+        com.sun.management.OperatingSystemMXBean oss= (com.sun.management.OperatingSystemMXBean)ManagementFactory.getOperatingSystemMXBean();
         String problem = "5,5;2;0,4;1,4;0,1,1,1,2,1,3,1,3,3,3,4;1,0,2,4;0,3,4,3,4,3,0,3;0,0,30,3,0,80,4,4,80";
-
+        System.out.println("Hello "+oss.getProcessCpuLoad());
         String s = "DF";
         System.out.println(s);;
         System.out.println(solve(problem, s, true));
+        System.out.println("CPU Utilization: "+String.format("%.02f", oss.getProcessCpuLoad()*100)+"%");
+        long total=(oss.getTotalPhysicalMemorySize());
+        long free=oss.getFreePhysicalMemorySize();
+        System.out.println("Memory Utilization: "+String.format("%.02f",(float)(total-free)/total*100)+"%");
     }
 
 
