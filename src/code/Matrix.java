@@ -179,19 +179,9 @@ public class Matrix extends SearchProblem {
         Matrix matrix = new Matrix(grid);
         MatrixConfig.visualize = visualize;
         Comparator<Node> chosenStrategy;
-        switch(SearchStrategy.parse(strategy)) {
-            case BF: chosenStrategy = Comparator.comparingInt(node -> node.depth); break;
-            case DF: chosenStrategy = Comparator.comparingInt(node -> -node.depth); break;
-            case UC: chosenStrategy = Comparator.comparingInt(node -> node.pathCost); break;
-            //case ID:
-            case GR1: chosenStrategy = Comparator.comparingInt(node -> matrix.heuristic_1(node)); break;
-            case GR2: chosenStrategy = Comparator.comparingInt(node -> matrix.heuristic_2(node)); break;
-            case AS1: chosenStrategy = Comparator.comparingInt(node -> node.pathCost + matrix.heuristic_1(node)); break;
-            case AS2: chosenStrategy = Comparator.comparingInt(node -> node.pathCost + matrix.heuristic_2(node)); break;
-            default: chosenStrategy = Comparator.comparingInt(node -> -node.depth);; //Let DFS be the default
-        }
+        return SearchStrategy.parse(strategy).search(matrix);
 
-        return matrix.searchProcedure(chosenStrategy);
+//        return matrix.genericSearchProcedure(chosenStrategy);
     }
 
     static void visualize(String currentState) {
@@ -266,59 +256,26 @@ public class Matrix extends SearchProblem {
         System.out.printf("#Dead=%d\t#Killed=%d\tneo Damage=%d\n", currentState.countDead, currentState.countKilled, currentState.neoDamage);
     }
 
-//    // the goal test should take the variables directly and return false or true, no need for the string state?
-//    static boolean goalTest(State state) {
-//        return state.hostagesDamage.size() == 0 && state.carriedDamage.size() == 0 && state.mutatedX.size() == 0;
-//    }
-
-
 
     public static void main(String[] args) {
         System.out.println("Hello world");
-//      String p1 = "14,5;2;7,0;2,3;8,3,8,1,9,2,2,0;8,3,9,1,0,4,6,1;2,0,10,1,10,1,2,0;6,2,76,7,2,78,0,0,55,11,2,11,4,4,90,2,4,56,0,2,21,13,2,63,12,3,85,1,2,26";
-//        String problem = "3,3;1;2,2;1,2;;;;2,0,88";
-        //String problem = "3,3;1;2,2;1,2;;;;2,0,84";
-        //String problem = "3,3;1;2,2;1,2;2,1;;;2,0,80";
-//        String problem = "3,3;1;2,2;1,2;2,1,1,1;;;2,0,80";
 
         String problem = "5,5;2;0,4;1,4;0,1,1,1,2,1,3,1,3,3,3,4;1,0,2,4;0,3,4,3,4,3,0,3;0,0,30,3,0,80,4,4,80";
-        //String problem = "3,3;1;2,2;1,2;;;;2,0,0";
-//        String problem = "11,5;1;9,3;2,4;0,2,7,3,3,4,5,0,1,3,3,2,7,4;1,4,9,4,2,3;9,0,8,3,8,3,9,0,2,2,10,3,10,3,2,2,2,1,1,0,1,0,2,1,6,2,6,1,6,1,6,2,4,4,7,0,7,0,4,4,4,2,0,4,0,4,4,2,5,3,0,1,0,1,5,3,7,2,5,2,5,2,7,2,9,2,10,2,10,2,9,2,9,1,4,0,4,0,9,1,0,0,8,4,8,4,0,0,6,3,1,1,1,1,6,3,4,3,5,4,5,4,4,3,3,3,3,1,3,1,3,3,8,2,10,1,10,1,8,2;2,0,24,6,4,18,3,0,58,10,0,45,5,1,51,6,0,79,8,1,96,0,3,34";
-//        String problem = genGrid();
 
-        System.out.println("Gengrid Output:\n" + problem);
-//        System.out.println(solve(problem, "DF", true));
-//        for (int i=0; i<SearchStrategy.values().length; i++){
-//            SearchStrategy ss = SearchStrategy.values()[i];
-//            if (ss.toString()=="AD" || ss.toString()=="BF")continue;;
-//            System.out.println(ss);;
-//            System.out.println(solve(problem, ss.toString(), false));
-//        }
         String s = "DF";
         System.out.println(s);;
         System.out.println(solve(problem, s, true));
-
-
-//        System.out.println(solve(problem, "UC", false));
     }
 
 
 }
 
 /*
-neo 1
-tb  1
-                    f(n,m) = N*M - 2
 
-hostages    3:10
-pills       1:hostages
-agents      1:inf                   INF -> free
-
- */
 
 
 /*
-------------------------------------------------------------------STATE STRING------------------------------------------
+-----------------------------------STATE STRING------------------------------------------
 NeoX,NeoY,NeoDamage;
 countOfKilledAgents;
 AgentX1,AgentY1, ...,AgentXk,AgentYk;

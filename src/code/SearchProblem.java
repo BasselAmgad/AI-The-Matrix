@@ -14,7 +14,10 @@ public abstract class SearchProblem {
     public abstract int pathCostFUnction(String stateString);
     public abstract String problemOutput(Node goal);
 
-    public String searchProcedure(Comparator<Node> comp){
+    public abstract int heuristic_1(Node node);
+    public abstract int heuristic_2(Node node);
+
+    public String genericSearchProcedure(Comparator<Node> comp){
         this.visitedStates = new HashSet<>();
         this.expandedNodesCnt = 0;
         PriorityQueue<Node> queue = new PriorityQueue<>(comp);
@@ -26,15 +29,35 @@ public abstract class SearchProblem {
             expandedNodesCnt++;
             State state = new State(currentNode.state);
             if (goalTestFUnction(state)) {
-//                if (currentNode.)
-//                System.out.println(problemOutput(currentNode));
                 return (problemOutput(currentNode));
             }
             expand(queue, currentNode, visitedStates);
-//            System.out.println(expandedNodesCnt);
         }
         return "Couldn't reach a goal state !";
     }
+    public String DepthLimitedSearch(int limit){
+        this.visitedStates = new HashSet<>();
+        this.expandedNodesCnt = 0;
+        PriorityQueue<Node> queue = new PriorityQueue<>(Comparator.comparingInt(node -> -node.depth));
+
+        Node root = new Node(initialState, null, null, 0, 0);
+        queue.add(root);
+        while (!queue.isEmpty()){
+            Node currentNode = queue.poll();
+            if (currentNode.depth > limit)
+                return "cutoff";
+            expandedNodesCnt++;
+            State state = new State(currentNode.state);
+            if (goalTestFUnction(state)) {
+                return (problemOutput(currentNode));
+            }
+            expand(queue, currentNode, visitedStates);
+        }
+        //TODO: this return means the queue got empty --> didn't return because of the cutoff limit but because no more expansions are possible ==> terminate IDS and don't try bigger limits
+        return "empty";
+    }
+
+
     public String[] constructPlan(Node leaf){
         Node current = leaf;
         LinkedList<String> sequence = new LinkedList<>();

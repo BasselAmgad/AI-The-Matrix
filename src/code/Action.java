@@ -3,36 +3,22 @@ package code;
 import java.util.ArrayList;
 
 public enum Action implements Operator {
-    TAKE_PILL("takePill"){
-        @Override
-        public StateResult applyOperator(State state) {
-            for (int i = 0; i < state.pillsX.size(); i++) {
-                if (state.pillsX.get(i) == state.neoX && state.pillsY.get(i) == state.neoY) {
-                    state.pillsX.remove(i);
-                    state.pillsY.remove(i);
-                    state.neoDamage = Math.max(0, state.neoDamage - 20);
-                    for (int j = 0; j < state.hostagesDamage.size(); j++) {
-                        //All hostages remaining in hostagesX, hostagesY, hostagesDamage are still alive
-                        int oldDamage = state.hostagesDamage.get(j);
-                        state.hostagesDamage.set(j, oldDamage - 20);
-                    }
-                    for (int j = 0; j < state.carriedDamage.size(); j++) {
-                        //All carried remaining with damage<100 carriedDamage are still alive
-                        int oldDamage = state.carriedDamage.get(j);
-                        if (oldDamage<100)
-                            state.carriedDamage.set(j, oldDamage - 20);
-                    }
-                    return new StateResult.NewState(state.decodeState());
-                }
-            }
-            return new StateResult.None();
-        }
-    },
     UP("up"){
         @Override
         public StateResult applyOperator(State state) {
             if (state.neoX != 0 && !state.doesAgentExist(state.neoX - 1, state.neoY)) {
                 state.neoX--;
+                state.increaseHostagesDamage();
+                return new StateResult.NewState(state.decodeState());
+            }
+            return new StateResult.None();
+        }
+    },
+    DOWN("down"){
+        @Override
+        public StateResult applyOperator(State state) {
+            if (state.neoX != MatrixConfig.M - 1 && !state.doesAgentExist(state.neoX+ 1, state.neoY)) {
+                state.neoX++;
                 state.increaseHostagesDamage();
                 return new StateResult.NewState(state.decodeState());
             }
@@ -45,6 +31,48 @@ public enum Action implements Operator {
             if (state.neoY != 0 && !state.doesAgentExist(state.neoX, state.neoY - 1)) {
                 state.neoY--;
                 state.increaseHostagesDamage();
+                return new StateResult.NewState(state.decodeState());
+            }
+            return new StateResult.None();
+        }
+    },
+    RIGHT("right"){
+        @Override
+        public StateResult applyOperator(State state) {
+            if (state.neoY != MatrixConfig.N - 1 && !state.doesAgentExist(state.neoX, state.neoY + 1)) {
+                state.neoY++;
+                state.increaseHostagesDamage();
+                return new StateResult.NewState(state.decodeState());
+            }
+            return new StateResult.None();
+        }
+    },
+    CARRY("carry"){
+        @Override
+        public StateResult applyOperator(State state) {
+            if (state.carriedDamage.size() == MatrixConfig.carryCapacity)
+                return new StateResult.None();
+
+            int i = 0;
+            while (i < state.hostagesX.size()) {
+                if (state.hostagesX.get(i) == state.neoX && state.hostagesY.get(i) == state.neoY) {
+                    state.hostagesX.remove(i);
+                    state.hostagesY.remove(i);
+                    state.carriedDamage.add(state.hostagesDamage.remove(i));
+                    state.increaseHostagesDamage();
+                    return new StateResult.NewState(state.decodeState());
+                }
+                i++;
+            }
+            return new StateResult.None();
+        }
+    },
+    DROP("drop"){
+        @Override
+        public StateResult applyOperator(State state) {
+            if (state.neoX == MatrixConfig.telephoneX && state.neoY == MatrixConfig.telephoneY
+                    && state.carriedDamage.size() > 0) {
+                state.carriedDamage = new ArrayList<>();
                 return new StateResult.NewState(state.decodeState());
             }
             return new StateResult.None();
@@ -96,44 +124,27 @@ public enum Action implements Operator {
             return new StateResult.NewState(state.decodeState());
         }
     },
-    CARRY("carry"){
+    TAKE_PILL("takePill"){
         @Override
         public StateResult applyOperator(State state) {
-            if (state.carriedDamage.size() == MatrixConfig.carryCapacity)
-                return new StateResult.None();
-
-            int i = 0;
-            while (i < state.hostagesX.size()) {
-                if (state.hostagesX.get(i) == state.neoX && state.hostagesY.get(i) == state.neoY) {
-                    state.hostagesX.remove(i);
-                    state.hostagesY.remove(i);
-                    state.carriedDamage.add(state.hostagesDamage.remove(i));
-                    state.increaseHostagesDamage();
+            for (int i = 0; i < state.pillsX.size(); i++) {
+                if (state.pillsX.get(i) == state.neoX && state.pillsY.get(i) == state.neoY) {
+                    state.pillsX.remove(i);
+                    state.pillsY.remove(i);
+                    state.neoDamage = Math.max(0, state.neoDamage - 20);
+                    for (int j = 0; j < state.hostagesDamage.size(); j++) {
+                        //All hostages remaining in hostagesX, hostagesY, hostagesDamage are still alive
+                        int oldDamage = state.hostagesDamage.get(j);
+                        state.hostagesDamage.set(j, oldDamage - 20);
+                    }
+                    for (int j = 0; j < state.carriedDamage.size(); j++) {
+                        //All carried remaining with damage<100 carriedDamage are still alive
+                        int oldDamage = state.carriedDamage.get(j);
+                        if (oldDamage<100)
+                            state.carriedDamage.set(j, oldDamage - 20);
+                    }
                     return new StateResult.NewState(state.decodeState());
                 }
-                i++;
-            }
-            return new StateResult.None();
-        }
-    },
-    DOWN("down"){
-        @Override
-        public StateResult applyOperator(State state) {
-            if (state.neoX != MatrixConfig.M - 1 && !state.doesAgentExist(state.neoX+ 1, state.neoY)) {
-                state.neoX++;
-                state.increaseHostagesDamage();
-                return new StateResult.NewState(state.decodeState());
-            }
-            return new StateResult.None();
-        }
-    },
-    RIGHT("right"){
-        @Override
-        public StateResult applyOperator(State state) {
-            if (state.neoY != MatrixConfig.N - 1 && !state.doesAgentExist(state.neoX, state.neoY + 1)) {
-                state.neoY++;
-                state.increaseHostagesDamage();
-                return new StateResult.NewState(state.decodeState());
             }
             return new StateResult.None();
         }
@@ -148,17 +159,6 @@ public enum Action implements Operator {
                     state.increaseHostagesDamage();
                     return new StateResult.NewState(state.decodeState());
                 }
-            }
-            return new StateResult.None();
-        }
-    },
-    DROP("drop"){
-        @Override
-        public StateResult applyOperator(State state) {
-            if (state.neoX == MatrixConfig.telephoneX && state.neoY == MatrixConfig.telephoneY
-                    && state.carriedDamage.size() > 0) {
-                state.carriedDamage = new ArrayList<>();
-                return new StateResult.NewState(state.decodeState());
             }
             return new StateResult.None();
         }
