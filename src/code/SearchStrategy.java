@@ -25,11 +25,12 @@ public enum SearchStrategy implements SearchProcedure{
         public String search(SearchProblem problem) {
             int limit = 0;
             while(true){//TODO: check that the maximum depth of an actually expanded node is l
+//                String result = problem.DepthLimitedSearch(limit);
                 String result = problem.DepthLimitedSearch(limit);
                 if (result.equals("empty")){
                     return "Couldn't reach a goal state !";
                 }
-                else if(result.equals("cutoff")){
+                else if (result.equals("cutoff")){
                     limit++;
                 }
                 else{

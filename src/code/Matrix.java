@@ -261,10 +261,36 @@ public class Matrix extends SearchProblem {
         System.out.println("Hello world");
 
         String problem = "5,5;2;0,4;1,4;0,1,1,1,2,1,3,1,3,3,3,4;1,0,2,4;0,3,4,3,4,3,0,3;0,0,30,3,0,80,4,4,80";
+//        String problem = "11,5;1;2,0;7,4;5,4,3,1;8,0,8,1,0,2,2,1,0,3;1,2,8,4,8,4,1,2,3,2,5,0,5,0,3,2,1,3,1,0,1,0,1,3,5,2,0,4,0,4,5,2,3,4,9,2,9,2,3,4,7,1,10,3,10,3,7,1,4,3,4,0,4,0,4,3,6,3,4,4,4,4,6,3,0,1,2,3,2,3,0,1,6,0,8,3,8,3,6,0,9,1,6,1,6,1,9,1,2,4,9,3,9,3,2,4,7,2,10,4,10,4,7,2,5,3,7,0,7,0,5,3,10,2,8,2,8,2,10,2,1,4,10,1,10,1,1,4,9,4,6,4,6,4,9,4;7,3,37,4,1,55,10,0,11,9,0,56,1,1,55,2,2,18,0,0,78,3,3,78,6,2,94";//genGrid();
+        System.out.println(problem);;
 
-        String s = "DF";
+        String s;
+        long t0;
+
+        t0 = System.nanoTime();
+        s = "AS1";
         System.out.println(s);;
-        System.out.println(solve(problem, s, true));
+        System.out.println(solve(problem, s, false));
+        System.out.println((System.nanoTime()-t0)/1e9);
+
+        t0 = System.nanoTime();
+        s = "DF";
+        System.out.println(s);;
+        System.out.println(solve(problem, s, false));
+        System.out.println((System.nanoTime()-t0)/1e9);
+
+//        t0 = System.nanoTime();
+//        s = "BF";
+//        System.out.println(s);;
+//        System.out.println(solve(problem, s, false));
+//        System.out.println((System.nanoTime()-t0)/1e9);
+
+        t0 = System.nanoTime();
+        s = "ID";
+        System.out.println(s);;
+        System.out.println(solve(problem, s, false));
+        System.out.println((System.nanoTime()-t0)/1e9);
+
     }
 
 
