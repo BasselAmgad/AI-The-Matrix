@@ -180,11 +180,13 @@ public class Matrix extends SearchProblem {
         return sb.toString();
     }
 
-    static String solve(String grid, String strategy, boolean visualize) {
+    public static String solve(String grid, String strategy, boolean visualize) {
         Matrix matrix = new Matrix(grid);
         MatrixConfig.visualize = visualize;
         Comparator<Node> chosenStrategy;
-        return SearchStrategy.parse(strategy).search(matrix);
+        String output = SearchStrategy.parse(strategy).search(matrix);
+        System.out.println(output);
+        return output;
 
 //        return matrix.genericSearchProcedure(chosenStrategy);
     }
@@ -271,7 +273,7 @@ public class Matrix extends SearchProblem {
         long t0;
 
         t0 = System.nanoTime();
-        s = "DF";
+        s = "ID";
         System.out.println(s);;
         System.out.println(solve(problem, s, false));
         System.out.println("Time taken: "+ (System.nanoTime()-t0)/1e9);

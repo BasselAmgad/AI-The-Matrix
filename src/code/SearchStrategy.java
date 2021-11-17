@@ -28,7 +28,7 @@ public enum SearchStrategy implements SearchProcedure{
 //                String result = problem.DepthLimitedSearch(limit);
                 String result = problem.DepthLimitedSearch(limit);
                 if (result.equals("empty")){
-                    return "Couldn't reach a goal state !";
+                    return "No Solution";
                 }
                 else if (result.equals("cutoff")){
                     limit++;

@@ -114,9 +114,20 @@ public class State {
     }
 
     @SuppressWarnings("all")
+    public boolean isCellDangerous(int x, int y) {
+        return doesAgentExist(x, y) || willMutatedExist(x, y);
+    }
     public boolean doesAgentExist(int x, int y) {
         for (int i = 0; i < agentsX.size(); i++) {
             if (agentsX.get(i) == x && agentsY.get(i) == y) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public boolean willMutatedExist(int x, int y) {
+        for (int i = 0; i < hostagesX.size(); i++) {
+            if (hostagesX.get(i) == x && hostagesY.get(i) == y && hostagesDamage.get(i)>=98) {
                 return true;
             }
         }

@@ -6,7 +6,7 @@ public enum Action implements Operator {
     UP("up"){
         @Override
         public StateResult applyOperator(State state) {
-            if (state.neoX != 0 && !state.doesAgentExist(state.neoX - 1, state.neoY)) {
+            if (state.neoX != 0 && !state.isCellDangerous(state.neoX - 1, state.neoY)) {
                 state.neoX--;
                 state.increaseHostagesDamage();
                 return new StateResult.NewState(state.decodeState());
@@ -17,7 +17,7 @@ public enum Action implements Operator {
     DOWN("down"){
         @Override
         public StateResult applyOperator(State state) {
-            if (state.neoX != MatrixConfig.M - 1 && !state.doesAgentExist(state.neoX+ 1, state.neoY)) {
+            if (state.neoX != MatrixConfig.M - 1 && !state.isCellDangerous(state.neoX+ 1, state.neoY)) {
                 state.neoX++;
                 state.increaseHostagesDamage();
                 return new StateResult.NewState(state.decodeState());
@@ -28,7 +28,7 @@ public enum Action implements Operator {
     LEFT("left"){
         @Override
         public StateResult applyOperator(State state) {
-            if (state.neoY != 0 && !state.doesAgentExist(state.neoX, state.neoY - 1)) {
+            if (state.neoY != 0 && !state.isCellDangerous(state.neoX, state.neoY - 1)) {
                 state.neoY--;
                 state.increaseHostagesDamage();
                 return new StateResult.NewState(state.decodeState());
@@ -39,7 +39,7 @@ public enum Action implements Operator {
     RIGHT("right"){
         @Override
         public StateResult applyOperator(State state) {
-            if (state.neoY != MatrixConfig.N - 1 && !state.doesAgentExist(state.neoX, state.neoY + 1)) {
+            if (state.neoY != MatrixConfig.N - 1 && !state.isCellDangerous(state.neoX, state.neoY + 1)) {
                 state.neoY++;
                 state.increaseHostagesDamage();
                 return new StateResult.NewState(state.decodeState());
@@ -73,6 +73,7 @@ public enum Action implements Operator {
             if (state.neoX == MatrixConfig.telephoneX && state.neoY == MatrixConfig.telephoneY
                     && state.carriedDamage.size() > 0) {
                 state.carriedDamage = new ArrayList<>();
+                state.increaseHostagesDamage();
                 return new StateResult.NewState(state.decodeState());
             }
             return new StateResult.None();
@@ -81,6 +82,8 @@ public enum Action implements Operator {
     KILL("kill"){
         @Override
         public StateResult applyOperator(State state) {
+            if (state.willMutatedExist(state.neoX, state.neoY))
+                return new StateResult.None();
             int[] dx = new int[]{-1, 0, 1, 0};
             int[] dy = new int[]{0, -1, 0, 1};
             boolean isFound = false;

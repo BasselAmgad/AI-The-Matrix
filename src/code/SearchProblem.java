@@ -29,16 +29,20 @@ public abstract class SearchProblem {
             expandedNodesCnt++;
             State state = new State(currentNode.state);
             if (goalTestFUnction(state)) {
+                Matrix.visualize(state);
                 return (problemOutput(currentNode));
             }
             expand(queue, currentNode, visitedStates);
         }
-        return "Couldn't reach a goal state !";
+        return "No Solution";
     }
     public String DepthLimitedSearch(int limit){
         this.visitedStates = new HashSet<>();
         if (limit==0)
             this.expandedNodesCnt = 0;
+//        else{
+//            System.out.println(expandedNodesCnt);
+//        }
         PriorityQueue<Node> queue = new PriorityQueue<>(Comparator.comparingInt(node -> -node.depth));
 
         Node root = new Node(initialState, null, null, 0, 0);
