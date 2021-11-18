@@ -5,6 +5,11 @@ import java.util.ArrayList;
 public enum Action implements Operator {
     UP("up"){
         @Override
+        public int getCost() {
+            return 22;
+        }
+
+        @Override
         public StateResult applyOperator(State state) {
             if (state.neoX != 0 && !state.isCellDangerous(state.neoX - 1, state.neoY)) {
                 state.neoX--;
@@ -15,6 +20,11 @@ public enum Action implements Operator {
         }
     },
     DOWN("down"){
+        @Override
+        public int getCost() {
+            return 22;
+        }
+
         @Override
         public StateResult applyOperator(State state) {
             if (state.neoX != MatrixConfig.M - 1 && !state.isCellDangerous(state.neoX+ 1, state.neoY)) {
@@ -27,6 +37,11 @@ public enum Action implements Operator {
     },
     LEFT("left"){
         @Override
+        public int getCost() {
+            return 22;
+        }
+
+        @Override
         public StateResult applyOperator(State state) {
             if (state.neoY != 0 && !state.isCellDangerous(state.neoX, state.neoY - 1)) {
                 state.neoY--;
@@ -38,6 +53,11 @@ public enum Action implements Operator {
     },
     RIGHT("right"){
         @Override
+        public int getCost() {
+            return 22;
+        }
+
+        @Override
         public StateResult applyOperator(State state) {
             if (state.neoY != MatrixConfig.N - 1 && !state.isCellDangerous(state.neoX, state.neoY + 1)) {
                 state.neoY++;
@@ -48,6 +68,11 @@ public enum Action implements Operator {
         }
     },
     CARRY("carry"){
+        @Override
+        public int getCost() {
+            return 20;
+        }
+
         @Override
         public StateResult applyOperator(State state) {
             if (state.carriedDamage.size() == MatrixConfig.carryCapacity)
@@ -69,6 +94,11 @@ public enum Action implements Operator {
     },
     DROP("drop"){
         @Override
+        public int getCost() {
+            return 20;
+        }
+
+        @Override
         public StateResult applyOperator(State state) {
             if (state.neoX == MatrixConfig.telephoneX && state.neoY == MatrixConfig.telephoneY
                     && state.carriedDamage.size() > 0) {
@@ -80,6 +110,11 @@ public enum Action implements Operator {
         }
     },
     KILL("kill"){
+        @Override
+        public int getCost() {
+            return 42;
+        }
+
         @Override
         public StateResult applyOperator(State state) {
             if (state.willMutatedExist(state.neoX, state.neoY))
@@ -129,6 +164,11 @@ public enum Action implements Operator {
     },
     TAKE_PILL("takePill"){
         @Override
+        public int getCost() {
+            return 0;
+        }
+
+        @Override
         public StateResult applyOperator(State state) {
             for (int i = 0; i < state.pillsX.size(); i++) {
                 if (state.pillsX.get(i) == state.neoX && state.pillsY.get(i) == state.neoY) {
@@ -153,6 +193,11 @@ public enum Action implements Operator {
         }
     },
     FLY("fly"){
+        @Override
+        public int getCost() {
+            return 22;
+        }
+
         @Override
         public StateResult applyOperator(State state) {
             for (int i = 0; i < MatrixConfig.startPadsX.length; i++) {

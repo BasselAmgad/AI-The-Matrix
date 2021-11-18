@@ -11,7 +11,7 @@ public abstract class SearchProblem {
 
     public abstract boolean goalTestFUnction(State state);
 //    public abstract int pathCostFUnction(Operator operator);
-    public abstract int pathCostFUnction(String stateString);
+    public abstract int pathCostFUnction(Node parent, Operator op);
     public abstract String problemOutput(Node goal);
 
     public abstract int heuristic_1(Node node);
@@ -88,7 +88,7 @@ public abstract class SearchProblem {
                     visitedStates.add(stateString);
                     //TODO: what should pathCost inputs be ? operator ? operator and parent ? or opeartor only and the parent to it ?
 //                    Node newNode = new Node(stateString, currentNode, op, currentNode.depth + 1, currentNode.pathCost + pathCostFUnction(op));
-                    Node newNode = new Node(stateString, currentNode, op, currentNode.depth + 1, pathCostFUnction(stateString));
+                    Node newNode = new Node(stateString, currentNode, op, currentNode.depth + 1, pathCostFUnction(currentNode, op));
                     queue.add(newNode);
                 }
             }

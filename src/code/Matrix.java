@@ -39,9 +39,8 @@ public class Matrix extends SearchProblem {
 //        return 0;
 //    }
     @Override
-    public int pathCostFUnction(String stateString) {
-        State state = new State(stateString);
-        return 1000*(state.countDead*250 + state.countKilled);
+    public int pathCostFUnction(Node parent, Operator op) {
+        return parent.pathCost + op.getCost();
     }
 
     @Override
