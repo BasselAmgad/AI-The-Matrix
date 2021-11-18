@@ -80,8 +80,10 @@ public abstract class SearchProblem {
         return sequence.toArray(new String[sequence.size()]);
     }
     public void expand(PriorityQueue<Node> queue, Node currentNode, HashSet<String> visitedStates){
-        for (Operator op : operators){
-            StateResult exp = op.applyOperator(new State(currentNode.state));
+        List<Operator> ops = Arrays.asList(operators);
+//        Collections.shuffle(ops);
+        for (Operator op : ops){
+            StateResult exp = op.applyOperator(new State(currentNode.state), currentNode.operator);
             if (exp instanceof StateResult.NewState){
                 String stateString = ((StateResult.NewState) exp).getResult();
                 if (!visitedStates.contains(stateString)) {

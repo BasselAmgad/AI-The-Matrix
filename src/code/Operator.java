@@ -2,5 +2,5 @@ package code;
 
 public interface Operator {
     public String getCode();
-    StateResult applyOperator(State state);
+    StateResult applyOperator(State state, Operator op);
 }

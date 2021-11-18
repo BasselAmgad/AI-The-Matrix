@@ -273,7 +273,7 @@ public class Matrix extends SearchProblem {
         long t0;
 
         t0 = System.nanoTime();
-        s = "ID";
+        s = "UC";
         System.out.println(s);;
         System.out.println(solve(problem, s, false));
         System.out.println("Time taken: "+ (System.nanoTime()-t0)/1e9);

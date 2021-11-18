@@ -3,53 +3,12 @@ package code;
 import java.util.ArrayList;
 
 public enum Action implements Operator {
-    UP("up"){
-        @Override
-        public StateResult applyOperator(State state) {
-            if (state.neoX != 0 && !state.isCellDangerous(state.neoX - 1, state.neoY)) {
-                state.neoX--;
-                state.increaseHostagesDamage();
-                return new StateResult.NewState(state.decodeState());
-            }
-            return new StateResult.None();
-        }
-    },
-    DOWN("down"){
-        @Override
-        public StateResult applyOperator(State state) {
-            if (state.neoX != MatrixConfig.M - 1 && !state.isCellDangerous(state.neoX+ 1, state.neoY)) {
-                state.neoX++;
-                state.increaseHostagesDamage();
-                return new StateResult.NewState(state.decodeState());
-            }
-            return new StateResult.None();
-        }
-    },
-    LEFT("left"){
-        @Override
-        public StateResult applyOperator(State state) {
-            if (state.neoY != 0 && !state.isCellDangerous(state.neoX, state.neoY - 1)) {
-                state.neoY--;
-                state.increaseHostagesDamage();
-                return new StateResult.NewState(state.decodeState());
-            }
-            return new StateResult.None();
-        }
-    },
-    RIGHT("right"){
-        @Override
-        public StateResult applyOperator(State state) {
-            if (state.neoY != MatrixConfig.N - 1 && !state.isCellDangerous(state.neoX, state.neoY + 1)) {
-                state.neoY++;
-                state.increaseHostagesDamage();
-                return new StateResult.NewState(state.decodeState());
-            }
-            return new StateResult.None();
-        }
-    },
+
     CARRY("carry"){
         @Override
-        public StateResult applyOperator(State state) {
+        public StateResult applyOperator(State state, Operator op) {
+            if (op!=null && op.equals(Action.DROP))
+                return new StateResult.None();
             if (state.carriedDamage.size() == MatrixConfig.carryCapacity)
                 return new StateResult.None();
 
@@ -69,7 +28,7 @@ public enum Action implements Operator {
     },
     DROP("drop"){
         @Override
-        public StateResult applyOperator(State state) {
+        public StateResult applyOperator(State state, Operator op) {
             if (state.neoX == MatrixConfig.telephoneX && state.neoY == MatrixConfig.telephoneY
                     && state.carriedDamage.size() > 0) {
                 state.carriedDamage = new ArrayList<>();
@@ -81,7 +40,7 @@ public enum Action implements Operator {
     },
     KILL("kill"){
         @Override
-        public StateResult applyOperator(State state) {
+        public StateResult applyOperator(State state, Operator op) {
             if (state.willMutatedExist(state.neoX, state.neoY))
                 return new StateResult.None();
             int[] dx = new int[]{-1, 0, 1, 0};
@@ -129,7 +88,9 @@ public enum Action implements Operator {
     },
     TAKE_PILL("takePill"){
         @Override
-        public StateResult applyOperator(State state) {
+        public StateResult applyOperator(State state, Operator op) {
+            if (op!=null && op.equals(Action.TAKE_PILL))
+                return new StateResult.None();
             for (int i = 0; i < state.pillsX.size(); i++) {
                 if (state.pillsX.get(i) == state.neoX && state.pillsY.get(i) == state.neoY) {
                     state.pillsX.remove(i);
@@ -154,7 +115,9 @@ public enum Action implements Operator {
     },
     FLY("fly"){
         @Override
-        public StateResult applyOperator(State state) {
+        public StateResult applyOperator(State state, Operator op) {
+            if (op!=null && op.equals(Action.FLY))
+                return new StateResult.None();
             for (int i = 0; i < MatrixConfig.startPadsX.length; i++) {
                 if (MatrixConfig.startPadsX[i] == state.neoX && MatrixConfig.startPadsY[i] == state.neoY) {
                     state.neoX = MatrixConfig.finishPadsX[i];
@@ -165,8 +128,59 @@ public enum Action implements Operator {
             }
             return new StateResult.None();
         }
+    },
+    UP("up"){
+        @Override
+        public StateResult applyOperator(State state, Operator op) {
+            if (op!=null && op.equals(Action.DOWN))
+                return new StateResult.None();
+            if (state.neoX != 0 && !state.isCellDangerous(state.neoX - 1, state.neoY)) {
+                state.neoX--;
+                state.increaseHostagesDamage();
+                return new StateResult.NewState(state.decodeState());
+            }
+            return new StateResult.None();
+        }
+    },
+    DOWN("down"){
+        @Override
+        public StateResult applyOperator(State state, Operator op) {
+            if (op!=null && op.equals(Action.UP))
+                return new StateResult.None();
+            if (state.neoX != MatrixConfig.M - 1 && !state.isCellDangerous(state.neoX+ 1, state.neoY)) {
+                state.neoX++;
+                state.increaseHostagesDamage();
+                return new StateResult.NewState(state.decodeState());
+            }
+            return new StateResult.None();
+        }
+    },
+    LEFT("left"){
+        @Override
+        public StateResult applyOperator(State state, Operator op) {
+            if (op!=null && op.equals(Action.RIGHT))
+                return new StateResult.None();
+            if (state.neoY != 0 && !state.isCellDangerous(state.neoX, state.neoY - 1)) {
+                state.neoY--;
+                state.increaseHostagesDamage();
+                return new StateResult.NewState(state.decodeState());
+            }
+            return new StateResult.None();
+        }
+    },
+    RIGHT("right"){
+        @Override
+        public StateResult applyOperator(State state, Operator op) {
+            if (op!=null && op.equals(Action.LEFT))
+                return new StateResult.None();
+            if (state.neoY != MatrixConfig.N - 1 && !state.isCellDangerous(state.neoX, state.neoY + 1)) {
+                state.neoY++;
+                state.increaseHostagesDamage();
+                return new StateResult.NewState(state.decodeState());
+            }
+            return new StateResult.None();
+        }
     };
-
 
 
 
