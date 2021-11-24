@@ -192,75 +192,10 @@ public class Matrix extends SearchProblem {
     }
 
     static void visualize(String currentState) {
-        visualize(new State(currentState));
+
+        System.out.println(new State(currentState).tosString());
     }
     static void visualize(State currentState) {
-        if (!MatrixConfig.visualize)
-            return;
-        int neoX = currentState.neoX;
-        int neoY = currentState.neoY;
-        ArrayList<Integer> pillsX = currentState.pillsX;
-        ArrayList<Integer> pillsY = currentState.pillsY;
-        ArrayList<Integer> agentsX = currentState.agentsX;
-        ArrayList<Integer> agentsY = currentState.agentsY;
-        ArrayList<Integer> hostagesX = currentState.hostagesX;
-        ArrayList<Integer> hostagesY = currentState.hostagesY;
-        ArrayList<Integer> hostagesDamage = currentState.hostagesDamage;
-        ArrayList<Integer> carriedDamage = currentState.carriedDamage;
-        ArrayList<Integer> mutatedX = currentState.mutatedX;
-        ArrayList<Integer> mutatedY = currentState.mutatedY;
-
-
-        // Preparing to print the state of the grid
-        String[][] vis = new String[MatrixConfig.M][MatrixConfig.N];
-        for (int i = 0; i < MatrixConfig.M; i++) {
-            for (int j = 0; j < MatrixConfig.N; j++) {
-                vis[i][j] = "";
-            }
-        }
-        vis[neoX][neoY] += "N";
-        vis[MatrixConfig.telephoneX][MatrixConfig.telephoneY] += "T";
-        for (int i = 0; i < pillsX.size(); i++) {
-            vis[pillsX.get(i)][pillsY.get(i)] += "P";
-        }
-        for (int i = 0; i < agentsX.size(); i++) {
-            vis[agentsX.get(i)][agentsY.get(i)] += "A";
-        }
-        int cntrPds = 0;
-        for (int i = 0; i < MatrixConfig.startPadsX.length; i++) {
-            vis[MatrixConfig.startPadsX[i]][MatrixConfig.startPadsY[i]] += "F" + cntrPds;
-            vis[MatrixConfig.finishPadsX[i]][MatrixConfig.finishPadsY[i]] += "T" + (cntrPds);
-            cntrPds++;
-        }
-        for (int i = 0; i < hostagesX.size(); i++) {
-            vis[hostagesX.get(i)][hostagesY.get(i)] += String.format("H(%d)", hostagesDamage.get(i));
-        }
-        for (int i = 0; i < carriedDamage.size(); i++) {
-            vis[neoX][neoY] += String.format("C(%d)", carriedDamage.get(i));
-        }
-        for (int i = 0; i < mutatedY.size(); i++) {
-            vis[mutatedX.get(i)][mutatedY.get(i)] += "M";
-        }
-
-        // Printing the state of the grid
-        int cellMaxSize = 8;
-        String strf = "%-" + cellMaxSize + "s | ";
-        String line = "";
-        for (int i = 0; i < (MatrixConfig.N + 1) * (cellMaxSize + 3) - 1; i++) line += "-";
-        for (int j = -1; j < MatrixConfig.N; j++) {
-            System.out.printf(strf, j);
-        }
-        System.out.println();
-        System.out.println(line);
-        for (int i = 0; i < MatrixConfig.M; i++) {
-            System.out.printf(strf, i);
-            for (int j = 0; j < MatrixConfig.N; j++) {
-                System.out.printf(strf, vis[i][j]);
-            }
-            System.out.println();
-            System.out.println(line);
-        }
-        System.out.printf("#Dead=%d\t#Killed=%d\tneo Damage=%d\n", currentState.countDead, currentState.countKilled, currentState.neoDamage);
     }
 
 

@@ -99,13 +99,13 @@ public enum Action implements Operator {
                     for (int j = 0; j < state.hostagesDamage.size(); j++) {
                         //All hostages remaining in hostagesX, hostagesY, hostagesDamage are still alive
                         int oldDamage = state.hostagesDamage.get(j);
-                        state.hostagesDamage.set(j, oldDamage - 20);
+                        state.hostagesDamage.set(j, Math.max(oldDamage - 20, 0));
                     }
                     for (int j = 0; j < state.carriedDamage.size(); j++) {
                         //All carried remaining with damage<100 carriedDamage are still alive
                         int oldDamage = state.carriedDamage.get(j);
                         if (oldDamage<100)
-                            state.carriedDamage.set(j, oldDamage - 20);
+                            state.carriedDamage.set(j, Math.max(oldDamage - 20, 0));
                     }
                     return new StateResult.NewState(state.decodeState());
                 }
@@ -180,7 +180,8 @@ public enum Action implements Operator {
             }
             return new StateResult.None();
         }
-    };
+    },
+    ;
 
 
 

@@ -47,11 +47,17 @@ public abstract class SearchProblem {
 
         Node root = new Node(initialState, null, null, 0, 0);
         queue.add(root);
+        int maxDepthReached = -1;
         while (!queue.isEmpty()){
             Node currentNode = queue.poll();
-            if (currentNode.depth > limit)
-                return "cutoff";
+            if (currentNode.depth > limit) {
+//                System.out.println("Limit: "+limit+":  "+expandedNodesCnt);
+//                return "cutoff";
+                continue;
+            }
+//            System.out.printf("Node @depth=%d parent=%s, oldExpandedCnt=%d\n", currentNode.depth, currentNode.operator==null?"null":currentNode.operator.toString(), expandedNodesCnt);
             expandedNodesCnt++;
+            maxDepthReached = Math.max(maxDepthReached, currentNode.depth);
             State state = new State(currentNode.state);
             if (goalTestFUnction(state)) {
                 return (problemOutput(currentNode));
@@ -59,6 +65,8 @@ public abstract class SearchProblem {
             expand(queue, currentNode, visitedStates);
         }
         //TODO: this return means the queue got empty --> didn't return because of the cutoff limit but because no more expansions are possible ==> terminate IDS and don't try bigger limits
+        if (maxDepthReached==limit)
+            return "cutoff";
         return "empty";
     }
 
