@@ -1,6 +1,8 @@
 package code;
 
 public interface Operator {
-    public String getCode();
+
+    String getCode();
+
     StateResult applyOperator(State state, Operator op);
 }

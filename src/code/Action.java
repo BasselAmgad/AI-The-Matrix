@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 public enum Action implements Operator {
 
-    CARRY("carry"){
+    CARRY("carry") {
         @Override
         public StateResult applyOperator(State state, Operator op) {
-            if (op!=null && op.equals(Action.DROP))
+            if (op != null && op.equals(Action.DROP))
                 return new StateResult.None();
             if (state.carriedDamage.size() == MatrixConfig.carryCapacity)
                 return new StateResult.None();
@@ -26,7 +26,7 @@ public enum Action implements Operator {
             return new StateResult.None();
         }
     },
-    DROP("drop"){
+    DROP("drop") {
         @Override
         public StateResult applyOperator(State state, Operator op) {
             if (state.neoX == MatrixConfig.telephoneX && state.neoY == MatrixConfig.telephoneY
@@ -38,7 +38,7 @@ public enum Action implements Operator {
             return new StateResult.None();
         }
     },
-    KILL("kill"){
+    KILL("kill") {
         @Override
         public StateResult applyOperator(State state, Operator op) {
             if (state.willMutatedExist(state.neoX, state.neoY))
@@ -60,13 +60,12 @@ public enum Action implements Operator {
                         i++;
                     }
                 }
-                i=0;
+                i = 0;
                 while (i < state.mutatedX.size()) {
                     if (state.mutatedX.get(i) == x & state.mutatedY.get(i) == y) {
                         state.mutatedX.remove(i);
                         state.mutatedY.remove(i);
                         state.countKilled++;
-                        state.countDead++;
                         isFound = true;
                     } else {
                         i++;
@@ -78,18 +77,17 @@ public enum Action implements Operator {
                 if (state.neoDamage == 100) {
                     return new StateResult.None();
                 }
-            }
-            else{
+            } else {
                 return new StateResult.None();
             }
             state.increaseHostagesDamage();
             return new StateResult.NewState(state.decodeState());
         }
     },
-    TAKE_PILL("takePill"){
+    TAKE_PILL("takePill") {
         @Override
         public StateResult applyOperator(State state, Operator op) {
-            if (op!=null && op.equals(Action.TAKE_PILL))
+            if (op != null && op.equals(Action.TAKE_PILL))
                 return new StateResult.None();
             for (int i = 0; i < state.pillsX.size(); i++) {
                 if (state.pillsX.get(i) == state.neoX && state.pillsY.get(i) == state.neoY) {
@@ -104,7 +102,7 @@ public enum Action implements Operator {
                     for (int j = 0; j < state.carriedDamage.size(); j++) {
                         //All carried remaining with damage<100 carriedDamage are still alive
                         int oldDamage = state.carriedDamage.get(j);
-                        if (oldDamage<100)
+                        if (oldDamage < 100)
                             state.carriedDamage.set(j, Math.max(oldDamage - 20, 0));
                     }
                     return new StateResult.NewState(state.decodeState());
@@ -113,10 +111,10 @@ public enum Action implements Operator {
             return new StateResult.None();
         }
     },
-    FLY("fly"){
+    FLY("fly") {
         @Override
         public StateResult applyOperator(State state, Operator op) {
-            if (op!=null && op.equals(Action.FLY))
+            if (op != null && op.equals(Action.FLY))
                 return new StateResult.None();
             for (int i = 0; i < MatrixConfig.startPadsX.length; i++) {
                 if (MatrixConfig.startPadsX[i] == state.neoX && MatrixConfig.startPadsY[i] == state.neoY) {
@@ -129,10 +127,10 @@ public enum Action implements Operator {
             return new StateResult.None();
         }
     },
-    UP("up"){
+    UP("up") {
         @Override
         public StateResult applyOperator(State state, Operator op) {
-            if (op!=null && op.equals(Action.DOWN))
+            if (op != null && op.equals(Action.DOWN))
                 return new StateResult.None();
             if (state.neoX != 0 && !state.isCellDangerous(state.neoX - 1, state.neoY)) {
                 state.neoX--;
@@ -142,12 +140,12 @@ public enum Action implements Operator {
             return new StateResult.None();
         }
     },
-    DOWN("down"){
+    DOWN("down") {
         @Override
         public StateResult applyOperator(State state, Operator op) {
-            if (op!=null && op.equals(Action.UP))
+            if (op != null && op.equals(Action.UP))
                 return new StateResult.None();
-            if (state.neoX != MatrixConfig.M - 1 && !state.isCellDangerous(state.neoX+ 1, state.neoY)) {
+            if (state.neoX != MatrixConfig.M - 1 && !state.isCellDangerous(state.neoX + 1, state.neoY)) {
                 state.neoX++;
                 state.increaseHostagesDamage();
                 return new StateResult.NewState(state.decodeState());
@@ -155,10 +153,10 @@ public enum Action implements Operator {
             return new StateResult.None();
         }
     },
-    LEFT("left"){
+    LEFT("left") {
         @Override
         public StateResult applyOperator(State state, Operator op) {
-            if (op!=null && op.equals(Action.RIGHT))
+            if (op != null && op.equals(Action.RIGHT))
                 return new StateResult.None();
             if (state.neoY != 0 && !state.isCellDangerous(state.neoX, state.neoY - 1)) {
                 state.neoY--;
@@ -168,10 +166,10 @@ public enum Action implements Operator {
             return new StateResult.None();
         }
     },
-    RIGHT("right"){
+    RIGHT("right") {
         @Override
         public StateResult applyOperator(State state, Operator op) {
-            if (op!=null && op.equals(Action.LEFT))
+            if (op != null && op.equals(Action.LEFT))
                 return new StateResult.None();
             if (state.neoY != MatrixConfig.N - 1 && !state.isCellDangerous(state.neoX, state.neoY + 1)) {
                 state.neoY++;
@@ -180,13 +178,14 @@ public enum Action implements Operator {
             }
             return new StateResult.None();
         }
-    },
-    ;
-
-
+    };
 
     public final String code;
-    public String getCode(){return code;}
+
+    public String getCode() {
+        return code;
+    }
+
     Action(String code) {
         this.code = code;
     }

@@ -1,24 +1,24 @@
 package code;
 
 import java.lang.management.ManagementFactory;
-import java.lang.management.OperatingSystemMXBean;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.lang.management.ManagementFactory;
 
 public class Matrix extends SearchProblem {
 
-
-    public Matrix(String problem){
+    public Matrix(String problem) {
         this.initialState = ProblemParser.parseProblem(problem);
         this.operators = Action.values();
         System.out.println(Arrays.toString(operators));
     }
+
     @Override
     public boolean goalTestFUnction(State state) {
-        return state.neoX == MatrixConfig.telephoneX && state.neoY==MatrixConfig.telephoneY &&
-                state.hostagesDamage.size() == 0 && state.carriedDamage.size() == 0 && state.mutatedX.size() == 0;
+        return state.neoX == MatrixConfig.telephoneX
+                && state.neoY == MatrixConfig.telephoneY
+                && state.hostagesDamage.size() == 0
+                && state.carriedDamage.size() == 0
+                && state.mutatedX.size() == 0;
     }
 
 //    @Override
@@ -38,42 +38,71 @@ public class Matrix extends SearchProblem {
 //            return 2;
 //        return 0;
 //    }
+
     @Override
     public int pathCostFUnction(String stateString) {
         State state = new State(stateString);
-        return 1000*(state.countDead*250 + state.countKilled);
+        return 1000 * (state.countDead * ((MatrixConfig.M * MatrixConfig.N) +1) + state.countKilled + 1);
     }
 
     @Override
     public String problemOutput(Node goal) {
         State state = new State(goal.state);
         String plan = String.join(",", constructPlan(goal));
-        return plan+";"+state.countDead +";" + state.countKilled +";" + this.expandedNodesCnt;
+        return plan + ";" + state.countDead + ";" + state.countKilled + ";" + this.expandedNodesCnt;
     }
-    public int heuristic_1(Node node){
+
+    public int heuristic_1(Node node) {
         State state = new State(node.state);
         int sum = 0;
-        for (int i=0;i <state.hostagesDamage.size(); i++){
+        for (int i = 0; i < state.hostagesDamage.size(); i++) {
             sum += state.hostagesDamage.get(i);
+        }
+        for (int i = 0; i < state.carriedDamage.size(); i++) {
+            if (state.carriedDamage.get(i)<100)
+                sum += state.carriedDamage.get(i);
         }
         return sum;
     }
-    public int heuristic_2(Node node){
+
+    public int heuristic_2(Node node) {
         State state = new State(node.state);
         int totEst = 0;
-        for (int i=0;i <state.hostagesDamage.size(); i++){
+        for (int i = 0; i < state.hostagesDamage.size(); i++) {
             int hx = state.hostagesX.get(i);
             int hy = state.hostagesY.get(i);
-            int hd = state.hostagesDamage.get(i);
+            // int hd = state.hostagesDamage.get(i);
             int tx = MatrixConfig.telephoneX;
             int ty = MatrixConfig.telephoneY;
-            int distance = (int)(Math.abs(hx-tx)+Math.abs(hy-ty));
-            totEst += hd * distance;
+            int distance = (int) (Math.abs(hx - tx) + Math.abs(hy - ty));
+            totEst += distance;//* hd;
         }
-        return  totEst;
+        return totEst;
     }
 
-
+    @Override
+    public int heuristic_3(Node node) {
+        State state = new State(node.state);
+        int totEst = 0;
+        for (int i = 0; i < state.hostagesDamage.size(); i++) {
+            int hx = state.hostagesX.get(i);
+            int hy = state.hostagesY.get(i);
+             int hd = state.hostagesDamage.get(i);
+            int tx = MatrixConfig.telephoneX;
+            int ty = MatrixConfig.telephoneY;
+            int distance = (int) (Math.abs(hx - tx) + Math.abs(hy - ty));
+            totEst += distance* hd;
+        }
+        return totEst;
+    }
+    @Override
+    public int heuristic_4(Node node) {
+        return 0;
+    }
+    @Override
+    public int heuristic_5(Node node) {
+        return 0;
+    }
 
     static String genGrid() {
         StringBuilder sb = new StringBuilder();
@@ -176,7 +205,7 @@ public class Matrix extends SearchProblem {
         sb.append(String.join(",", pills)).append(";");
         sb.append(String.join(",", pads)).append(";");
         sb.append(String.join(",", hostages));
-        ;
+
         return sb.toString();
     }
 
@@ -187,43 +216,32 @@ public class Matrix extends SearchProblem {
         String output = SearchStrategy.parse(strategy).search(matrix);
         System.out.println(output);
         return output;
-
-//        return matrix.genericSearchProcedure(chosenStrategy);
     }
-
-    static void visualize(String currentState) {
-
-        System.out.println(new State(currentState).tosString());
-    }
-    static void visualize(State currentState) {
-    }
-
 
     public static void main(String[] args) {
-        System.out.println("Hello world");
-        com.sun.management.OperatingSystemMXBean oss= (com.sun.management.OperatingSystemMXBean)ManagementFactory.getOperatingSystemMXBean();
-        String problem = "5,5;2;0,4;1,4;0,1,1,1,2,1,3,1,3,3,3,4;1,0,2,4;0,3,4,3,4,3,0,3;0,0,30,3,0,80,4,4,80";
-        System.out.println("Hello "+oss.getProcessCpuLoad());
+        com.sun.management.OperatingSystemMXBean oss = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+
+        String grid3 = "6,6;2;2,4;2,2;0,4,1,4,3,0,4,2;0,1,1,3;4,4,3,1,3,1,4,4;0,0,94,1,2,38,4,1,76,4,0,80";
+        String grid4 = "5,5;1;0,4;4,4;0,3,1,4,2,1,3,0,4,1;4,0;2,4,3,4,3,4,2,4;0,2,98,1,2,98,2,2,98,3,2,98,4,2,98,2,0,98,1,0,98";
+        //        String problem = "5,5;2;0,4;1,4;0,1,1,1,2,1,3,1,3,3,3,4;1,0,2,4;0,3,4,3,4,3,0,3;0,0,30,3,0,80,4,4,80";
+        String problem = genGrid();//grid3;
+        System.out.println("Hello " + oss.getProcessCpuLoad());
+
         String s;
-        long t0;
+        long t0, t1;
 
         t0 = System.nanoTime();
-        s = "UC";
-        System.out.println(s);;
-        System.out.println(solve(problem, s, false));
-        System.out.println("Time taken: "+ (System.nanoTime()-t0)/1e9);
-        System.out.println("CPU Utilization: "+String.format("%.02f", oss.getProcessCpuLoad()*100)+"%");
-        long total=(oss.getTotalPhysicalMemorySize());
-        long free=oss.getFreePhysicalMemorySize();
-        System.out.println("Memory Utilization: "+String.format("%.02f",(float)(total-free)/total*100)+"%");
+        s = "DF";
+        solve(problem, s, true);
+        t1 = System.nanoTime();
+        double cpuLoad = oss.getProcessCpuLoad() * 100;
+        long total = (oss.getTotalPhysicalMemorySize());
+        long free = oss.getFreePhysicalMemorySize();
+        System.out.println("Time taken: " + (t1 - t0) / 1e9);
+        System.out.println("CPU Utilization: " + String.format("%.02f", cpuLoad) + "%");
+        System.out.println("Memory Utilization: " + String.format("%.02f", (float) (total - free) / total * 100) + "%");
     }
-
-
 }
-
-/*
-
-
 
 /*
 -----------------------------------STATE STRING------------------------------------------
@@ -235,4 +253,4 @@ countOfDeadHostages;
 HostageX1,HostageY1,HostageDamage1, ...,HostageXw,HostageYw,HostageDamagew;
 carriedDamage1, ...,carriedDamageu;
 mutatedX1,mutatedY1, ...,mutatedXv,mutatedYv
- */
+*/

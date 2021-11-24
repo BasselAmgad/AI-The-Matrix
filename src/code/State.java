@@ -14,17 +14,18 @@ public class State {
     ArrayList<Integer> mutatedX, mutatedY;
 
     public String decodeState() {
-
         String[] agents = new String[agentsX.size() * 2];
         for (int i = 0; i < agentsX.size(); i++) {
             agents[i * 2] = "" + agentsX.get(i);
             agents[i * 2 + 1] = "" + agentsY.get(i);
         }
+
         String[] pills = new String[pillsX.size() * 2];
         for (int i = 0; i < pillsX.size(); i++) {
             pills[i * 2] = "" + pillsX.get(i);
             pills[i * 2 + 1] = "" + pillsY.get(i);
         }
+
         String[] hostages = new String[hostagesX.size() * 3];
         for (int i = 0; i < hostagesX.size(); i++) {
             hostages[i * 3] = "" + hostagesX.get(i);
@@ -36,12 +37,12 @@ public class State {
         for (int i = 0; i < carriedDamage.size(); i++) {
             carried[i] = "" + carriedDamage.get(i);
         }
+
         String[] mutated = new String[mutatedX.size() * 2];
         for (int i = 0; i < mutatedX.size(); i++) {
             mutated[i * 2] = "" + mutatedX.get(i);
             mutated[i * 2 + 1] = "" + mutatedY.get(i);
         }
-
 
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("%d,%d,%d;", neoX, neoY, neoDamage));
@@ -52,6 +53,7 @@ public class State {
         sb.append(String.join(",", hostages)).append(";");
         sb.append(String.join(",", carried)).append(";");
         sb.append(String.join(",", mutated));
+
         return sb.toString();
     }
 
@@ -115,8 +117,10 @@ public class State {
 
     @SuppressWarnings("all")
     public boolean isCellDangerous(int x, int y) {
-        return doesAgentExist(x, y) || willMutatedExist(x, y);
+
+        return doesAgentExist(x, y) || doesMutatedExist(x, y)|| willMutatedExist(x, y);
     }
+
     public boolean doesAgentExist(int x, int y) {
         for (int i = 0; i < agentsX.size(); i++) {
             if (agentsX.get(i) == x && agentsY.get(i) == y) {
@@ -125,9 +129,18 @@ public class State {
         }
         return false;
     }
+
     public boolean willMutatedExist(int x, int y) {
         for (int i = 0; i < hostagesX.size(); i++) {
-            if (hostagesX.get(i) == x && hostagesY.get(i) == y && hostagesDamage.get(i)>=98) {
+            if (hostagesX.get(i) == x && hostagesY.get(i) == y && hostagesDamage.get(i) >= 98) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public boolean doesMutatedExist(int x, int y) {
+        for (int i = 0; i < mutatedX.size(); i++) {
+            if (mutatedX.get(i) == x && mutatedY.get(i) == y) {
                 return true;
             }
         }
@@ -142,6 +155,7 @@ public class State {
                 mutatedX.add(hostagesX.remove(i));
                 mutatedY.add(hostagesY.remove(i));
                 hostagesDamage.remove(i);
+                countDead++;
             } else {
                 hostagesDamage.set(i, damage + 2);
                 i++;
@@ -164,7 +178,8 @@ public class State {
             i++;
         }
     }
-    public String tosString(){
+
+    public String visualize() {
         if (!MatrixConfig.visualize)
             return "";
         StringBuilder builder = new StringBuilder();
@@ -180,7 +195,6 @@ public class State {
         ArrayList<Integer> carriedDamage = this.carriedDamage;
         ArrayList<Integer> mutatedX = this.mutatedX;
         ArrayList<Integer> mutatedY = this.mutatedY;
-
 
         // Preparing to print the state of the grid
         String[][] vis = new String[MatrixConfig.M][MatrixConfig.N];
@@ -221,17 +235,17 @@ public class State {
         for (int j = -1; j < MatrixConfig.N; j++) {
             builder.append(String.format(strf, j));
         }
-        builder.append("\n");
-        builder.append(line+"\n");
+        builder.append("\n" + line + "\n");
         for (int i = 0; i < MatrixConfig.M; i++) {
             builder.append(String.format(strf, i));
             for (int j = 0; j < MatrixConfig.N; j++) {
                 builder.append(String.format(strf, vis[i][j]));
             }
             builder.append("\n");
-            builder.append(line+"\n");
+            builder.append(line + "\n");
         }
         builder.append(String.format("#Dead=%d\t#Killed=%d\tneo Damage=%d\n", this.countDead, this.countKilled, this.neoDamage));
+
         return builder.toString();
     }
 }
