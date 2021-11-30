@@ -54,7 +54,7 @@ public enum SearchStrategy implements SearchProcedure {
     GR2 {
         @Override
         public String search(SearchProblem problem) {
-            Comparator<Node> comp = Comparator.comparingInt(node -> problem.heuristic_2(node));
+            Comparator<Node> comp = Comparator.comparingInt(node -> problem.heuristic_4(node));
             return problem.genericSearchProcedure(comp);
         }
     },
@@ -68,7 +68,7 @@ public enum SearchStrategy implements SearchProcedure {
     AS2 {
         @Override
         public String search(SearchProblem problem) {
-            Comparator<Node> comp = Comparator.comparingInt(node -> node.pathCost + problem.heuristic_2(node));
+            Comparator<Node> comp = Comparator.comparingInt(node -> node.pathCost + problem.heuristic_4(node));
             return problem.genericSearchProcedure(comp);
         }
     };

@@ -123,12 +123,15 @@ public abstract class SearchProblem {
         if (MatrixConfig.visualize) {
             for (int i = 0; i < gridsArr.length - 1; i++) {
 //                for (int i = 0; i < gridsArr.length; i++) {
+                System.out.printf("depth=%d\tpath_cost=%d\trem=%d\th1=%d\th2=%d\th4=%d\tdeaths=%d\tkills=%d\n", i, pathCosts.get(i), goalPathCost-pathCosts.get(i), h1s.get(i), h2s.get(i), h4s.get(i), deaths.get(i), kills.get(i));
                 System.out.print(gridsArr[i]);
                 System.out.println(seqArr[i]);
-//                System.out.printf("depth=%d\tpath_cost=%d\trem=%d\th1=%d\th2=%d\tdeaths=%d\tkills=%d\n", i, pathCosts.get(i), goalPathCost-pathCosts.get(i), h1s.get(i), h2s.get(i), deaths.get(i), kills.get(i));
+
             }
+            System.out.printf("depth=%d\tpath_cost=%d\trem=%d\th1=%d\th2=%d\th4=%d\tdeaths=%d\tkills=%d\n", gridsArr.length-1, pathCosts.get(gridsArr.length-1), goalPathCost-pathCosts.get(gridsArr.length-1), h1s.get(gridsArr.length-1), h2s.get(gridsArr.length-1), h4s.get(gridsArr.length-1), deaths.get(gridsArr.length-1), kills.get(gridsArr.length-1));
             System.out.print(gridsArr[gridsArr.length - 1]);
-            System.out.println(cnt);
+
+//            System.out.println(cnt);
         }
         return seqArr;
     }

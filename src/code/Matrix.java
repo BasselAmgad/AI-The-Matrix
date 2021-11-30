@@ -6,10 +6,51 @@ import java.util.Comparator;
 
 public class Matrix extends SearchProblem {
 
+    int[][][][] sh_dist;
+    int death_weight, kills_weight;
+    void calculate_shortest_distance(){
+        int m = MatrixConfig.M;
+        int n = MatrixConfig.N;
+        sh_dist = new int[m][n][m][n];
+        for (int i=0;i<m;i++)
+            for(int j=0;j<n;j++)
+                for (int k=0;k<m;k++)
+                    Arrays.fill(sh_dist[i][j][k], Integer.MAX_VALUE);
+        for (int x1=0; x1<m;x1++){
+            for (int y1=0; y1<n; y1++){
+                for (int x2=0; x2<m; x2++){
+                    for (int y2=0; y2<n; y2++){
+                        int d1 = Math.abs(x2-x1) + Math.abs(y2-y1);
+                        for (int i=0; i<MatrixConfig.startPadsX.length; i++){
+                            int p1x = MatrixConfig.startPadsX[i];
+                            int p1y = MatrixConfig.startPadsY[i];
+                            int p2x = MatrixConfig.finishPadsX[i];
+                            int p2y = MatrixConfig.finishPadsY[i];
+                            int d2_1 = Math.abs(p1x-x1)+Math.abs(p1y-y1);
+                            int d2_2 = Math.abs(p2x-x2)+Math.abs(p2y-y2);
+                            int d2 = d2_1 + d2_2 + 1;
+                                int cur_min = Math.min(d1, d2);
+                            sh_dist[x1][y1][x2][y2] = Math.min(sh_dist[x1][y1][x2][y2], cur_min);
+                        }
+                    }
+                }
+            }
+        }
+//        int sx=2, sy= 0;
+//        for (int x2=0; x2<m; x2++){
+//            for (int y2=0; y2<n; y2++) {
+//                System.out.printf("Shortest Distance from (%d, %d) to (%d, %d) = %d\t",sx,sy,x2,y2,sh_dist[sx][sy][x2][y2]);
+//                System.out.printf("Shortest Distance from (%d, %d) to (%d, %d) = %d\n",sx,sy,x2,y2,sh_dist[x2][y2][sx][sy]);
+//            }
+//        }
+    }
     public Matrix(String problem) {
         this.initialState = ProblemParser.parseProblem(problem);
         this.operators = Action.values();
-        System.out.println(Arrays.toString(operators));
+        this.death_weight = (MatrixConfig.M * MatrixConfig.N) +1;
+        this.kills_weight = MatrixConfig.M + MatrixConfig.N;
+        calculate_shortest_distance();
+//        System.out.println(Arrays.toString(operators));
     }
 
     @Override
@@ -42,7 +83,8 @@ public class Matrix extends SearchProblem {
     @Override
     public int pathCostFUnction(String stateString) {
         State state = new State(stateString);
-        return 1000 * (state.countDead * ((MatrixConfig.M * MatrixConfig.N) +1) + state.countKilled + 1);
+        int distance_to_tb = Math.abs(state.neoX - MatrixConfig.telephoneX) + Math.abs(state.neoY - MatrixConfig.telephoneY);
+        return state.countDead * death_weight + state.countKilled * kills_weight + distance_to_tb;
     }
 
     @Override
@@ -97,7 +139,32 @@ public class Matrix extends SearchProblem {
     }
     @Override
     public int heuristic_4(Node node) {
-        return 0;
+        State state = new State(node.state);
+        int h = 0;
+        int mutants_to_kill = state.mutatedX.size();
+        int resotredByPills = 20 * state.pillsX.size();
+        int hostages_to_die = 0;
+        for (int i=0 ; i<state.hostagesX.size(); i++){
+            int hx = state.hostagesX.get(i);
+            int hy = state.hostagesY.get(i);
+            int hd = state.hostagesDamage.get(i);
+            int distanceToSave = sh_dist[state.neoX][state.neoY][hx][hy] + sh_dist[hx][hy][MatrixConfig.telephoneX][MatrixConfig.telephoneY];
+            int futureDamage = distanceToSave*2;
+            if (hd + futureDamage - resotredByPills > 100){
+                hostages_to_die ++;
+            }
+        }
+        for (int i=0 ; i<state.carriedDamage.size(); i++){
+            int hd = state.carriedDamage.get(i);
+            int distanceToSave = sh_dist[state.neoX][state.neoY][MatrixConfig.telephoneX][MatrixConfig.telephoneY];
+            int futureDamage = distanceToSave*2;
+            if (hd + futureDamage - resotredByPills > 100){
+                hostages_to_die ++;
+            }
+        }
+        int distance_to_tb = Math.abs(state.neoX - MatrixConfig.telephoneX) + Math.abs(state.neoY - MatrixConfig.telephoneY);
+        h = death_weight * hostages_to_die + kills_weight * mutants_to_kill + distance_to_tb;
+        return h;
     }
     @Override
     public int heuristic_5(Node node) {
@@ -224,14 +291,17 @@ public class Matrix extends SearchProblem {
         String grid3 = "6,6;2;2,4;2,2;0,4,1,4,3,0,4,2;0,1,1,3;4,4,3,1,3,1,4,4;0,0,94,1,2,38,4,1,76,4,0,80";
         String grid4 = "5,5;1;0,4;4,4;0,3,1,4,2,1,3,0,4,1;4,0;2,4,3,4,3,4,2,4;0,2,98,1,2,98,2,2,98,3,2,98,4,2,98,2,0,98,1,0,98";
         //        String problem = "5,5;2;0,4;1,4;0,1,1,1,2,1,3,1,3,3,3,4;1,0,2,4;0,3,4,3,4,3,0,3;0,0,30,3,0,80,4,4,80";
-        String problem = genGrid();//grid3;
+//        String ayman_test4="3,3;2;0,0;2,2; ; ;0,1,0,1,2,1,2,1;1,0,20";
+//        String ayman_test6 = "3,3;2;1,1;2,1;0,0;1,2;0,2,0,2,1,0,1,0;0,2,70,2,0,80";
+        String zizo_1 = "5,5;2;4,3;2,1;2,0,0,4,0,3,0,1;3,1,3,2;4,4,3,3,3,3,4,4;4,0,17,1,2,54,0,0,46,4,1,22";
+        String problem = zizo_1;//genGrid();//grid3;
         System.out.println("Hello " + oss.getProcessCpuLoad());
 
         String s;
         long t0, t1;
 
         t0 = System.nanoTime();
-        s = "DF";
+        s = "BF";
         solve(problem, s, true);
         t1 = System.nanoTime();
         double cpuLoad = oss.getProcessCpuLoad() * 100;
