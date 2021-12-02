@@ -147,8 +147,9 @@ public class State {
         return false;
     }
 
-    public void increaseHostagesDamage() {
+    public int increaseHostagesDamage() {
         int i = 0;
+        int died = 0;
         while (i < hostagesX.size()) {
             int damage = hostagesDamage.get(i);
             if (damage >= 98) {
@@ -156,6 +157,7 @@ public class State {
                 mutatedY.add(hostagesY.remove(i));
                 hostagesDamage.remove(i);
                 countDead++;
+                died++;
             } else {
                 hostagesDamage.set(i, damage + 2);
                 i++;
@@ -171,17 +173,26 @@ public class State {
                 int updatedDamage = 100;
                 carriedDamage.set(i, updatedDamage);
                 countDead++;
+                died++;
             } else {
                 int updatedDamage = damage + 2;
                 carriedDamage.set(i, updatedDamage);
             }
             i++;
         }
+        return died;
     }
 
     public String visualize() {
         if (!MatrixConfig.visualize)
             return "";
+        return this.toString();
+
+//        return builder.toString();
+    }
+
+    @Override
+    public String toString(){
         StringBuilder builder = new StringBuilder();
         int neoX = this.neoX;
         int neoY = this.neoY;
@@ -245,7 +256,6 @@ public class State {
             builder.append(line + "\n");
         }
         builder.append(String.format("#Dead=%d\t#Killed=%d\tneo Damage=%d\n", this.countDead, this.countKilled, this.neoDamage));
-
         return builder.toString();
     }
 }

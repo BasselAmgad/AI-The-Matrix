@@ -12,5 +12,7 @@ public final class MatrixConfig {
     public static int[] startPadsX, startPadsY, finishPadsX, finishPadsY;
     public static int expandedNodesCnt;
 
+    public static int death_weight, kills_weight;
+
     public static boolean visualize;
 }
