@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.junit.FixMethodOrder;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
 
 import code.Matrix;
@@ -13,7 +15,9 @@ import code.Matrix;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 
 public class TestMatrixPublic {
-	
+	@Rule
+	public TestName name = new TestName();
+
 	String grid0 = "5,5;2;3,4;1,2;0,3,1,4;2,3;4,4,0,2,0,2,4,4;2,2,91,2,4,62";
 	String grid1 = "5,5;1;1,4;1,0;0,4;0,0,2,2;3,4,4,2,4,2,3,4;0,2,32,0,1,38";
 	String grid2 = "5,5;2;3,2;0,1;4,1;0,3;1,2,4,2,4,2,1,2,0,4,3,0,3,0,0,4;1,1,77,3,4,34";
@@ -29,6 +33,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testa0() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid0, "BF", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid0, solution));
@@ -36,6 +41,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testa1() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid1, "BF", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid1, solution));
@@ -43,6 +49,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testa2() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid2, "BF", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid2, solution));
@@ -50,6 +57,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testa3() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid3, "BF", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid3, solution));
@@ -57,12 +65,14 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testa4() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid4, "BF", false);
 		assertTrue("The output actions do not lead to a goal state.", solution.equals("No Solution"));
 	}
 	
 	@Test(timeout = 10000)
 	public void testa5() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid5, "BF", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid5, solution));
@@ -70,6 +80,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testa6() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid6, "BF", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid6, solution));
@@ -77,6 +88,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 30000)
 	public void testa7() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid7, "BF", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid7, solution));
@@ -84,6 +96,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 30000)
 	public void testa8() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid8, "BF", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid8, solution));
@@ -91,6 +104,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 30000)
 	public void testa9() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid9, "BF", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid9, solution));
@@ -98,6 +112,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 60000)
 	public void testaz10() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid10, "BF", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid10, solution));
@@ -105,6 +120,7 @@ public class TestMatrixPublic {
 
 	@Test(timeout = 10000)
 	public void testb0() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid0, "DF", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid0, solution));
@@ -112,6 +128,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testb1() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid1, "DF", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid1, solution));
@@ -119,6 +136,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testb2() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid2, "DF", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid2, solution));
@@ -126,6 +144,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testb3() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid3, "DF", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid3, solution));
@@ -133,12 +152,14 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testb4() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid4, "DF", false);
 		assertTrue("The output actions do not lead to a goal state.", solution.equals("No Solution"));
 	}
 	
 	@Test(timeout = 10000)
 	public void testb5() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid5, "DF", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid5, solution));
@@ -146,6 +167,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testb6() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid6, "DF", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid6, solution));
@@ -153,6 +175,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 30000)
 	public void testb7() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid7, "DF", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.",applyPlan(grid7, solution) );
@@ -160,6 +183,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 30000)
 	public void testb8() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid8, "DF", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.",applyPlan(grid8, solution));
@@ -167,6 +191,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 30000)
 	public void testb9() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid9, "DF", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid9, solution));
@@ -174,6 +199,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 60000)
 	public void testbz10() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid10, "DF", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid10, solution));
@@ -181,6 +207,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testc0() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid0, "UC", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid0, solution));
@@ -188,6 +215,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testc1() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid1, "UC", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid1, solution));
@@ -195,6 +223,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testc2() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid2, "UC", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid2, solution));
@@ -202,6 +231,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testc3() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid3, "UC", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid3, solution));
@@ -210,12 +240,14 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testc4() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid4, "UC", false);
 		assertTrue("The output actions do not lead to a goal state.", solution.equals("No Solution"));
 	}
 	
 	@Test(timeout = 10000)
 	public void testc5() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid5, "UC", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid5, solution));
@@ -223,6 +255,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 30000)
 	public void testc6() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid6, "UC", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid6, solution));
@@ -230,6 +263,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 400000)
 	public void testc7() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid7, "UC", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.",  applyPlan(grid7, solution));
@@ -237,6 +271,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 400000)
 	public void testc8() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid8, "UC", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid8, solution));
@@ -244,6 +279,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 400000)
 	public void testc9() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid9, "UC", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid9, solution));
@@ -252,6 +288,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testd0() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid0, "ID", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid0, solution));
@@ -259,6 +296,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testd1() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid1, "ID", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid1, solution));
@@ -266,6 +304,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testd2() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid2, "ID", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid2, solution));
@@ -273,6 +312,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testd3() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid3, "ID", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid3, solution));
@@ -280,6 +320,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testd5() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid5, "ID", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid5, solution));
@@ -287,6 +328,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testd6() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid6, "ID", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid6, solution));
@@ -295,6 +337,7 @@ public class TestMatrixPublic {
 
 	@Test(timeout = 10000)
 	public void teste0() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid0, "GR1", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid0, solution));
@@ -302,6 +345,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void teste1() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid1, "GR1", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid1, solution));
@@ -309,6 +353,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void teste2() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid2, "GR1", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid2, solution));
@@ -316,6 +361,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void teste3() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid3, "GR1", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid3, solution));
@@ -323,12 +369,14 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void teste4() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid4, "GR1", false);
 		assertTrue("The output actions do not lead to a goal state.", solution.equals("No Solution"));
 	}
 	
 	@Test(timeout = 10000)
 	public void teste5() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid5, "GR1", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid5, solution));
@@ -336,6 +384,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 30000)
 	public void teste6() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid6, "GR1", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid6, solution));
@@ -343,6 +392,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 400000)
 	public void teste7() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid7, "GR1", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid7, solution));
@@ -350,6 +400,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 400000)
 	public void teste8() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid8, "GR1", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid8, solution));
@@ -357,6 +408,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 400000)
 	public void teste9() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid9, "GR1", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid9, solution));
@@ -364,6 +416,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testf0() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid0, "GR2", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid0, solution));
@@ -371,6 +424,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testf1() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid1, "GR2", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid1, solution));
@@ -378,6 +432,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testf2() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid2, "GR2", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid2, solution));
@@ -385,6 +440,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testf3() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid3, "GR2", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid3, solution));
@@ -392,12 +448,14 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testf4() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid4, "GR2", false);
 		assertTrue("The output actions do not lead to a goal state.", solution.equals("No Solution"));
 	}
 	
 	@Test(timeout = 10000)
 	public void testf5() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid5, "GR2", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid5, solution));
@@ -405,6 +463,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 30000)
 	public void testf6() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid6, "GR2", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid6, solution));
@@ -412,6 +471,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 400000)
 	public void testf7() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid7, "GR2", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid7, solution));
@@ -419,6 +479,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 400000)
 	public void testf8() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid8, "GR2", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid8, solution));
@@ -426,6 +487,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 400000)
 	public void testf9() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid9, "GR2", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid9, solution));
@@ -433,6 +495,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testg0() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid0, "AS1", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid0, solution));
@@ -440,6 +503,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testg1() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid1, "AS1", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid1, solution));
@@ -447,6 +511,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testg2() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid2, "AS1", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid2, solution));
@@ -454,6 +519,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testg3() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid3, "AS1", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid3, solution));
@@ -461,12 +527,14 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testg4() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid4, "AS1", false);
 		assertTrue("The output actions do not lead to a goal state.", solution.equals("No Solution"));
 	}
 	
 	@Test(timeout = 10000)
 	public void testg5() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid5, "AS1", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid5, solution));
@@ -474,6 +542,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 30000)
 	public void testg6() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid6, "AS1", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid6, solution));
@@ -481,6 +550,7 @@ public class TestMatrixPublic {
 
 	@Test(timeout = 400000)
 	public void testg7() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid7, "AS1", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid7, solution));
@@ -488,6 +558,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 400000)
 	public void testg8() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid8, "AS1", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid8, solution));
@@ -495,6 +566,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 400000)
 	public void testg9() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid9, "AS1", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid9, solution));
@@ -502,6 +574,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 400000)
 	public void testgz10() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid10, "AS1", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid10, solution));
@@ -510,6 +583,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testh0() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid0, "AS2", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid0, solution));
@@ -517,6 +591,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testh1() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid1, "AS2", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid1, solution));
@@ -524,6 +599,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testh2() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid2, "AS2", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid2, solution));
@@ -531,6 +607,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testh3() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid3, "AS2", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid3, solution));
@@ -538,12 +615,14 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 10000)
 	public void testh4() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid4, "AS2", false);
 		assertTrue("The output actions do not lead to a goal state.", solution.equals("No Solution"));
 	}
 	
 	@Test(timeout = 10000)
 	public void testh5() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid5, "AS2", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid5, solution));
@@ -551,6 +630,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 30000)
 	public void testh6() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid6, "AS2", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid6, solution));
@@ -558,6 +638,7 @@ public class TestMatrixPublic {
 
 	@Test(timeout = 400000)
 	public void testh7() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid7, "AS2", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid7, solution));
@@ -565,6 +646,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 400000)
 	public void testh8() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid8, "AS2", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid8, solution));
@@ -572,6 +654,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 400000)
 	public void testh9() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid9, "AS2", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid9, solution));
@@ -579,6 +662,7 @@ public class TestMatrixPublic {
 	
 	@Test(timeout = 400000)
 	public void testhz10() throws Exception {
+		System.out.print(name.getMethodName()+"\t");
 		String solution = Matrix.solve(grid10, "AS2", false);
 		solution = solution.replace(" ", "");
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid10, solution));

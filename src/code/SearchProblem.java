@@ -44,6 +44,7 @@ public abstract class SearchProblem {
             expand(queue, currentNode, visitedStates);
         }
 //        return ""+maxGoalDepth;
+        System.out.println();
         return "No Solution";
     }
 

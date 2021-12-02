@@ -122,6 +122,7 @@ public class Matrix extends SearchProblem {
         String[] ac = constructPlan(goal);
 //        System.out.println(ac.length);
         String plan = String.join(",", ac);
+        System.out.println(state.countDead + "\t" + state.countKilled + "\t" + this.expandedNodesCnt);
         return plan + ";" + state.countDead + ";" + state.countKilled + ";" + this.expandedNodesCnt;
     }
 
@@ -333,7 +334,7 @@ public class Matrix extends SearchProblem {
         Matrix matrix = new Matrix(grid);
         MatrixConfig.visualize = visualize;
         String output = SearchStrategy.parse(strategy).search(matrix);
-        System.out.println(output);
+//        System.out.println(output);
         return output;
     }
 
