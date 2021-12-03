@@ -30,6 +30,7 @@ public abstract class SearchProblem {
         PriorityQueue<Node> queue = new PriorityQueue<>(comp);
 
         int maxGoalDepth = -1;
+        int lastDepth = -1;
         Node root = new Node(initialState, null, null, 0, 0);
         queue.add(root);
         while (!queue.isEmpty()) {
@@ -37,13 +38,16 @@ public abstract class SearchProblem {
             expandedNodesCnt++;
             State state = new State(currentNode.state);
             if (goalTestFUnction(state)) {
+                lastDepth = currentNode.depth;
                 maxGoalDepth = Math.max(maxGoalDepth, currentNode.depth);
-                return (problemOutput(currentNode));
+//                System.out.println("\ninside Memory Utilization: " + String.format("%.02f", (float) (in_free - free) / total * 100) + "%");
+//                return (problemOutput(currentNode));
 //                System.out.println(problemOutput(currentNode));
             }
             expand(queue, currentNode, visitedStates);
         }
 //        return ""+maxGoalDepth;
+        System.out.printf("Max Goal Depth=%d\tMax expanded depth=%d\n",maxGoalDepth, lastDepth);
         return "No Solution";
     }
 

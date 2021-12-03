@@ -2,7 +2,6 @@ package code;
 
 import java.lang.management.ManagementFactory;
 import java.util.Arrays;
-import java.util.Comparator;
 
 public class Matrix extends SearchProblem {
 
@@ -47,7 +46,22 @@ public class Matrix extends SearchProblem {
 //        System.out.printf("%.6f\n", (t1-t0)/1e9);
     }
 
-    int est_MaxDepth_sol(State state){
+    public int est_MaxDepth_sol(State state){
+        int md = 100;
+        int dist = -1;
+        for (int i=0; i<state.hostagesDamage.size(); i++){
+            int d = state.hostagesDamage.get(i);
+            int x = state.hostagesX.get(i);
+            int y = state.hostagesY.get(i);
+            int saveDist = sh_dist[state.neoX][state.neoY][x][y];
+            dist = Math.max(dist, saveDist);
+            md = Math.min(md, d);
+        }
+        int ans = (int)Math.ceil(1.0*(100-md)/2) + state.pillsX.size()*10 + dist + MatrixConfig.M * MatrixConfig.N * state.hostagesX.size();
+//        System.out.println("Est max depth= "+ans);
+        return ans;
+    }
+    public int old_est_MaxDepth_sol(State state){
         int md = 100;
         int dist = -1;
         for (int i=0; i<state.hostagesDamage.size(); i++){
@@ -240,7 +254,7 @@ public class Matrix extends SearchProblem {
 //        return totEst;
 //    }
 
-    static String genGrid() {
+    public static String genGrid() {
         StringBuilder sb = new StringBuilder();
         int M = 5 + (int) (Math.random() * 11);
         int N = 5 + (int) (Math.random() * 11);
