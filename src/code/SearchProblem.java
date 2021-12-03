@@ -20,7 +20,7 @@ public abstract class SearchProblem {
 
     public abstract int heuristic_1(Node node);
     public abstract int heuristic_2(Node node);
-//    public abstract int heuristic_3(Node node);
+    public abstract int heuristic_3(Node node);
 //    public abstract int heuristic_4(Node node);
 //    public abstract int heuristic_5(Node node);
 
@@ -44,7 +44,6 @@ public abstract class SearchProblem {
             expand(queue, currentNode, visitedStates);
         }
 //        return ""+maxGoalDepth;
-        System.out.println();
         return "No Solution";
     }
 
@@ -86,9 +85,10 @@ public abstract class SearchProblem {
         Node current = leaf;
         LinkedList<String> sequence = new LinkedList<>();
         LinkedList<String> grids = new LinkedList<>();
-//        LinkedList<Integer> pathCosts = new LinkedList<>();
-//        LinkedList<Integer> h1s = new LinkedList<>();
-//        LinkedList<Integer> h2s = new LinkedList<>();
+        LinkedList<Integer> pathCosts = new LinkedList<>();
+        LinkedList<Integer> h1s = new LinkedList<>();
+        LinkedList<Integer> h2s = new LinkedList<>();
+        LinkedList<Integer> h3s = new LinkedList<>();
         LinkedList<Integer> deaths = new LinkedList<>();
         LinkedList<Integer> kills = new LinkedList<>();
 
@@ -98,10 +98,10 @@ public abstract class SearchProblem {
             sequence.push(current.operator.getCode());
             State state = new State(current.state);
             grids.push(state.visualize());
-//            pathCosts.push(current.pathCost);
-//            h1s.push(heuristic_1(current));
-//            h2s.push(heuristic_2(current));
-//            h3s.push(heuristic_3(current));
+            pathCosts.push(current.pathCost);
+            h1s.push(heuristic_1(current));
+            h2s.push(heuristic_2(current));
+            h3s.push(heuristic_3(current));
 //            h4s.push(heuristic_4(current));
 //            h5s.push(heuristic_5(current));
             deaths.push(state.countDead);
@@ -111,10 +111,10 @@ public abstract class SearchProblem {
         }
         State state = new State(current.state);
         grids.push(state.visualize());
-//        pathCosts.push(current.pathCost);
-//        h1s.push(heuristic_1(current));
-//        h2s.push(heuristic_2(current));
-//        h3s.push(heuristic_3(current));
+        pathCosts.push(current.pathCost);
+        h1s.push(heuristic_1(current));
+        h2s.push(heuristic_2(current));
+        h3s.push(heuristic_3(current));
 //        h4s.push(heuristic_4(current));
 //        h5s.push(heuristic_5(current));
         deaths.push(state.countDead);
@@ -125,12 +125,12 @@ public abstract class SearchProblem {
         if (MatrixConfig.visualize) {
             for (int i = 0; i < gridsArr.length - 1; i++) {
 //                for (int i = 0; i < gridsArr.length; i++) {
-//                System.out.printf("depth=%d\tpath_cost=%d\trem=%d\th1=%d\th2=%d\th4=%d\tdeaths=%d\tkills=%d\n", i, pathCosts.get(i), goalPathCost-pathCosts.get(i), h1s.get(i), h2s.get(i), h4s.get(i), deaths.get(i), kills.get(i));
+                System.out.printf("depth=%d\tpath_cost=%d\trem=%d\th1=%d\th2=%d\th3=%d\tdeaths=%d\tkills=%d\n", i, pathCosts.get(i), goalPathCost-pathCosts.get(i), h1s.get(i), h2s.get(i), h3s.get(i), deaths.get(i), kills.get(i));
                 System.out.print(gridsArr[i]);
                 System.out.println(seqArr[i]);
 
             }
-//            System.out.printf("depth=%d\tpath_cost=%d\trem=%d\th1=%d\th2=%d\th4=%d\tdeaths=%d\tkills=%d\n", gridsArr.length-1, pathCosts.get(gridsArr.length-1), goalPathCost-pathCosts.get(gridsArr.length-1), h1s.get(gridsArr.length-1), h2s.get(gridsArr.length-1), h4s.get(gridsArr.length-1), deaths.get(gridsArr.length-1), kills.get(gridsArr.length-1));
+            System.out.printf("depth=%d\tpath_cost=%d\trem=%d\th1=%d\th2=%d\th4=%d\tdeaths=%d\tkills=%d\n", gridsArr.length-1, pathCosts.get(gridsArr.length-1), goalPathCost-pathCosts.get(gridsArr.length-1), h1s.get(gridsArr.length-1), h2s.get(gridsArr.length-1), h3s.get(gridsArr.length-1), deaths.get(gridsArr.length-1), kills.get(gridsArr.length-1));
             System.out.print(gridsArr[gridsArr.length - 1]);
 
 //            System.out.println(cnt);
@@ -145,9 +145,10 @@ public abstract class SearchProblem {
             StateResult exp = op.applyOperator(new State(currentNode.state), currentNode.operator);
             if (exp instanceof StateResult.NewState) {
                 String stateString = ((StateResult.NewState) exp).getResult();
+                String hashString = ((StateResult.NewState) exp).getHashResult();
                 int opCost = ((StateResult.NewState) exp).getActionCost();
-                if (!visitedStates.contains(stateString)) {
-                    visitedStates.add(stateString);
+                if (!visitedStates.contains(hashString)) {
+                    visitedStates.add(hashString);
                     //TODO: what should pathCost inputs be ? operator ? operator and parent ? or opeartor only and the parent to it ?
 //                    Node newNode = new Node(stateString, currentNode, op, currentNode.depth + 1, currentNode.pathCost + pathCostFUnction(op));
                     Node newNode = new Node(stateString, currentNode, op, currentNode.depth + 1, currentNode.pathCost+opCost);

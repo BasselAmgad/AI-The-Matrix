@@ -24,7 +24,7 @@ public enum Action implements Operator {
                     state.carriedDamage.add(state.hostagesDamage.remove(i));
                     int died = state.increaseHostagesDamage();
                     int cost = getConstCost() + MatrixConfig.death_weight * died;
-                    return new StateResult.NewState(state.decodeState(), cost);
+                    return new StateResult.NewState(state.decodeState(), state.decodeDamagelessState(), cost);
                 }
                 i++;
             }
@@ -44,7 +44,7 @@ public enum Action implements Operator {
                 state.carriedDamage = new ArrayList<>();
                 int died = state.increaseHostagesDamage();
                 int cost = getConstCost() + MatrixConfig.death_weight * died;
-                return new StateResult.NewState(state.decodeState(), cost);
+                return new StateResult.NewState(state.decodeState(), state.decodeDamagelessState(), cost);
             }
             return new StateResult.None();
         }
@@ -98,7 +98,7 @@ public enum Action implements Operator {
             }
             int died = state.increaseHostagesDamage();
             int cost = getConstCost() + MatrixConfig.death_weight * died + MatrixConfig.kills_weight*killed;
-            return new StateResult.NewState(state.decodeState(), cost);
+            return new StateResult.NewState(state.decodeState(), state.decodeDamagelessState(), cost);
         }
     },
     TAKE_PILL("takePill") {
@@ -128,7 +128,7 @@ public enum Action implements Operator {
                             state.carriedDamage.set(j, Math.max(oldDamage - 20, 0));
                     }
                     int cost = getConstCost();
-                    return new StateResult.NewState(state.decodeState(), cost);
+                    return new StateResult.NewState(state.decodeState(), state.decodeDamagelessState(), cost);
                 }
             }
             return new StateResult.None();
@@ -150,7 +150,7 @@ public enum Action implements Operator {
                     state.neoY = MatrixConfig.finishPadsY[i];
                     int died = state.increaseHostagesDamage();
                     int cost = getConstCost() + MatrixConfig.death_weight * died;
-                    return new StateResult.NewState(state.decodeState(), cost);
+                    return new StateResult.NewState(state.decodeState(), state.decodeDamagelessState(), cost);
                 }
             }
             return new StateResult.None();
@@ -169,8 +169,8 @@ public enum Action implements Operator {
             if (state.neoX != 0 && !state.isCellDangerous(state.neoX - 1, state.neoY)) {
                 state.neoX--;
                 int died = state.increaseHostagesDamage();
-                int cost = 2 + MatrixConfig.death_weight * died;
-                return new StateResult.NewState(state.decodeState(), cost);
+                int cost = getConstCost() + MatrixConfig.death_weight * died;
+                return new StateResult.NewState(state.decodeState(), state.decodeDamagelessState(), cost);
             }
             return new StateResult.None();
         }
@@ -189,7 +189,7 @@ public enum Action implements Operator {
                 state.neoX++;
                 int died = state.increaseHostagesDamage();
                 int cost = getConstCost() + MatrixConfig.death_weight * died;
-                return new StateResult.NewState(state.decodeState(), cost);
+                return new StateResult.NewState(state.decodeState(), state.decodeDamagelessState(), cost);
             }
             return new StateResult.None();
         }
@@ -208,7 +208,7 @@ public enum Action implements Operator {
                 state.neoY--;
                 int died = state.increaseHostagesDamage();
                 int cost = getConstCost() + MatrixConfig.death_weight * died;
-                return new StateResult.NewState(state.decodeState(), cost);
+                return new StateResult.NewState(state.decodeState(), state.decodeDamagelessState(), cost);
             }
             return new StateResult.None();
         }
@@ -227,7 +227,7 @@ public enum Action implements Operator {
                 state.neoY++;
                 int died = state.increaseHostagesDamage();
                 int cost = getConstCost() + MatrixConfig.death_weight * died;
-                return new StateResult.NewState(state.decodeState(), cost);
+                return new StateResult.NewState(state.decodeState(), state.decodeDamagelessState(), cost);
             }
             return new StateResult.None();
         }

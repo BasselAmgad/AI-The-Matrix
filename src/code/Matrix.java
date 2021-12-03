@@ -125,9 +125,8 @@ public class Matrix extends SearchProblem {
         System.out.println(state.countDead + "\t" + state.countKilled + "\t" + this.expandedNodesCnt);
         return plan + ";" + state.countDead + ";" + state.countKilled + ";" + this.expandedNodesCnt;
     }
-
     @Override
-    public int heuristic_1(Node node) {
+    public int heuristic_3(Node node) {
         State state = new State(node.state);
         int h = 0;
         int mutants_to_kill = state.mutatedX.size();
@@ -157,6 +156,23 @@ public class Matrix extends SearchProblem {
         return h;
     }
 
+
+
+    @Override
+    public int heuristic_1(Node node) {
+        State state = new State(node.state);
+        int h = 0;
+        int mutants_to_kill = state.mutatedX.size();
+        int carried = state.carriedDamage.size();
+        int alive_hostages = state.hostagesX.size();
+        int h1 = sh_dist[state.neoX][state.neoY][MatrixConfig.telephoneX][MatrixConfig.telephoneY] * Action.UP.getConstCost();
+        int h2 = carried>0?  Action.DROP.getConstCost() : 0;
+        int h3 = mutants_to_kill * MatrixConfig.kills_weight;
+        int h4 = alive_hostages * Action.CARRY.getConstCost();
+        h = h1 + h2 + h3 + h4;
+        return h;
+    }
+
     @Override
     public int heuristic_2(Node node) {
 //        long t0 = System.nanoTime();
@@ -170,9 +186,13 @@ public class Matrix extends SearchProblem {
             int d = sh_dist[state.neoX][state.neoY][hx][hy] + sh_dist[hx][hy][MatrixConfig.telephoneX][MatrixConfig.telephoneY];
             expected_moves = Math.max(expected_moves, d);
         }
-//        expected_moves = Math.max(expected_moves, sh_dist[state.neoX][state.neoY][MatrixConfig.telephoneX][MatrixConfig.telephoneY]);
-        int dropCost = state.carriedDamage.size()>0?Action.DROP.getConstCost():0;
-        h = expected_moves * Action.UP.getConstCost() + dropCost + mutants_to_kill*MatrixConfig.kills_weight;
+        if (state.hostagesX.isEmpty()){
+            expected_moves = sh_dist[state.neoX][state.neoY][MatrixConfig.telephoneX][MatrixConfig.telephoneY];
+        }
+        int h1 = expected_moves * Action.UP.getConstCost();
+        int h2 = state.carriedDamage.size()>0?Action.DROP.getConstCost():0;
+        int h3 = mutants_to_kill*MatrixConfig.kills_weight;
+        h =  h1 + h2 + h3;
 //        long t1 = System.nanoTime();
 //        System.out.printf("h1: %.8f\n", (t1-t0)/1e9);
         return h;
