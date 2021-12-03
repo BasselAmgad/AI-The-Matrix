@@ -20,7 +20,13 @@ public interface StateResult {
         public String getResult() {
             return result;
         }
-        public String getHashResult(){ return hashResult;}
-        public int getActionCost(){return actionCost;}
+
+        public String getHashResult() {
+            return hashResult;
+        }
+
+        public int getActionCost() {
+            return actionCost;
+        }
     }
 }

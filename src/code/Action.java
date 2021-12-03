@@ -88,7 +88,7 @@ public enum Action implements Operator {
                     }
                 }
             }
-            if (killed>0) {
+            if (killed > 0) {
                 state.neoDamage = Math.min(100, state.neoDamage + 20);
                 if (state.neoDamage == 100) {
                     return new StateResult.None();
@@ -97,7 +97,7 @@ public enum Action implements Operator {
                 return new StateResult.None();
             }
             int died = state.increaseHostagesDamage();
-            int cost = getConstCost() + MatrixConfig.death_weight * died + MatrixConfig.kills_weight*killed;
+            int cost = getConstCost() + MatrixConfig.death_weight * died + MatrixConfig.kills_weight * killed;
             return new StateResult.NewState(state.decodeState(), state.decodeDamagelessState(), cost);
         }
     },
@@ -235,10 +235,6 @@ public enum Action implements Operator {
 
     public final String code;
 
-    public String getCode() {
-        return code;
-    }
-
     Action(String code) {
         this.code = code;
     }
@@ -250,5 +246,9 @@ public enum Action implements Operator {
             }
         }
         throw new IllegalArgumentException(String.format("Couldn't find an action with value %s.", action));
+    }
+
+    public String getCode() {
+        return code;
     }
 }

@@ -1,6 +1,12 @@
 package code;
 
-import java.util.*;
+import code.queue.DfsQueue;
+import code.queue.GenericQueue;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 
 public abstract class SearchProblem {
 
@@ -19,15 +25,16 @@ public abstract class SearchProblem {
     public abstract String problemOutput(Node goal);
 
     public abstract int heuristic_1(Node node);
+
     public abstract int heuristic_2(Node node);
+
     public abstract int heuristic_3(Node node);
 //    public abstract int heuristic_4(Node node);
 //    public abstract int heuristic_5(Node node);
 
-    public String genericSearchProcedure(Comparator<Node> comp) {
+    public String genericSearchProcedure(GenericQueue<Node> queue) {
         this.visitedStates = new HashSet<>();
         this.expandedNodesCnt = 0;
-        PriorityQueue<Node> queue = new PriorityQueue<>(comp);
 
         int maxGoalDepth = -1;
         int lastDepth = -1;
@@ -38,16 +45,15 @@ public abstract class SearchProblem {
             expandedNodesCnt++;
             State state = new State(currentNode.state);
             if (goalTestFUnction(state)) {
-                lastDepth = currentNode.depth;
-                maxGoalDepth = Math.max(maxGoalDepth, currentNode.depth);
+//                lastDepth = currentNode.depth;
+//                maxGoalDepth = Math.max(maxGoalDepth, currentNode.depth);
 //                System.out.println("\ninside Memory Utilization: " + String.format("%.02f", (float) (in_free - free) / total * 100) + "%");
-//                return (problemOutput(currentNode));
+                return problemOutput(currentNode);
 //                System.out.println(problemOutput(currentNode));
             }
             expand(queue, currentNode, visitedStates);
         }
-//        return ""+maxGoalDepth;
-        System.out.printf("Max Goal Depth=%d\tMax expanded depth=%d\n",maxGoalDepth, lastDepth);
+        System.out.printf("Max Goal Depth=%d\tMax expanded depth=%d\n", maxGoalDepth, lastDepth);
         return "No Solution";
     }
 
@@ -58,7 +64,7 @@ public abstract class SearchProblem {
 //        else{
 //            System.out.println(expandedNodesCnt);
 //        }
-        PriorityQueue<Node> queue = new PriorityQueue<>(Comparator.comparingInt(node -> -node.depth));
+        GenericQueue<Node> queue = new DfsQueue<>();
 
         Node root = new Node(initialState, null, null, 0, 0);
         queue.add(root);
@@ -129,12 +135,12 @@ public abstract class SearchProblem {
         if (MatrixConfig.visualize) {
             for (int i = 0; i < gridsArr.length - 1; i++) {
 //                for (int i = 0; i < gridsArr.length; i++) {
-                System.out.printf("depth=%d\tpath_cost=%d\trem=%d\th1=%d\th2=%d\th3=%d\tdeaths=%d\tkills=%d\n", i, pathCosts.get(i), goalPathCost-pathCosts.get(i), h1s.get(i), h2s.get(i), h3s.get(i), deaths.get(i), kills.get(i));
+                System.out.printf("depth=%d\tpath_cost=%d\trem=%d\th1=%d\th2=%d\th3=%d\tdeaths=%d\tkills=%d\n", i, pathCosts.get(i), goalPathCost - pathCosts.get(i), h1s.get(i), h2s.get(i), h3s.get(i), deaths.get(i), kills.get(i));
                 System.out.print(gridsArr[i]);
                 System.out.println(seqArr[i]);
 
             }
-            System.out.printf("depth=%d\tpath_cost=%d\trem=%d\th1=%d\th2=%d\th4=%d\tdeaths=%d\tkills=%d\n", gridsArr.length-1, pathCosts.get(gridsArr.length-1), goalPathCost-pathCosts.get(gridsArr.length-1), h1s.get(gridsArr.length-1), h2s.get(gridsArr.length-1), h3s.get(gridsArr.length-1), deaths.get(gridsArr.length-1), kills.get(gridsArr.length-1));
+            System.out.printf("depth=%d\tpath_cost=%d\trem=%d\th1=%d\th2=%d\th4=%d\tdeaths=%d\tkills=%d\n", gridsArr.length - 1, pathCosts.get(gridsArr.length - 1), goalPathCost - pathCosts.get(gridsArr.length - 1), h1s.get(gridsArr.length - 1), h2s.get(gridsArr.length - 1), h3s.get(gridsArr.length - 1), deaths.get(gridsArr.length - 1), kills.get(gridsArr.length - 1));
             System.out.print(gridsArr[gridsArr.length - 1]);
 
 //            System.out.println(cnt);
@@ -142,7 +148,7 @@ public abstract class SearchProblem {
         return seqArr;
     }
 
-    public void expand(PriorityQueue<Node> queue, Node currentNode, HashSet<String> visitedStates) {
+    public void expand(GenericQueue queue, Node currentNode, HashSet<String> visitedStates) {
         List<Operator> ops = Arrays.asList(operators);
 //        Collections.shuffle(ops);
         for (Operator op : ops) {
@@ -155,7 +161,7 @@ public abstract class SearchProblem {
                     visitedStates.add(hashString);
                     //TODO: what should pathCost inputs be ? operator ? operator and parent ? or opeartor only and the parent to it ?
 //                    Node newNode = new Node(stateString, currentNode, op, currentNode.depth + 1, currentNode.pathCost + pathCostFUnction(op));
-                    Node newNode = new Node(stateString, currentNode, op, currentNode.depth + 1, currentNode.pathCost+opCost);
+                    Node newNode = new Node(stateString, currentNode, op, currentNode.depth + 1, currentNode.pathCost + opCost);
                     queue.add(newNode);
                 }
             }

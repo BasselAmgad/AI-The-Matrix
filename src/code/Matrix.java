@@ -6,253 +6,20 @@ import java.util.Arrays;
 public class Matrix extends SearchProblem {
 
     int[][][][] sh_dist;
-    void calculate_shortest_distance(){
-        long t0 = System.nanoTime();
-        int m = MatrixConfig.M;
-        int n = MatrixConfig.N;
-        sh_dist = new int[m][n][m][n];
-        for (int i=0;i<m;i++)
-            for(int j=0;j<n;j++)
-                for (int k=0;k<m;k++)
-                    Arrays.fill(sh_dist[i][j][k], Integer.MAX_VALUE);
-        for (int x1=0; x1<m;x1++){
-            for (int y1=0; y1<n; y1++){
-                for (int x2=0; x2<m; x2++){
-                    for (int y2=0; y2<n; y2++){
-                        int d1 = Math.abs(x2-x1) + Math.abs(y2-y1);
-                        for (int i=0; i<MatrixConfig.startPadsX.length; i++){
-                            int p1x = MatrixConfig.startPadsX[i];
-                            int p1y = MatrixConfig.startPadsY[i];
-                            int p2x = MatrixConfig.finishPadsX[i];
-                            int p2y = MatrixConfig.finishPadsY[i];
-                            int d2_1 = Math.abs(p1x-x1)+Math.abs(p1y-y1);
-                            int d2_2 = Math.abs(p2x-x2)+Math.abs(p2y-y2);
-                            int d2 = d2_1 + d2_2 + 1;
-                                int cur_min = Math.min(d1, d2);
-                            sh_dist[x1][y1][x2][y2] = Math.min(sh_dist[x1][y1][x2][y2], cur_min);
-                        }
-                    }
-                }
-            }
-        }
-//        int sx=2, sy= 0;
-//        for (int x2=0; x2<m; x2++){
-//            for (int y2=0; y2<n; y2++) {
-//                System.out.printf("Shortest Distance from (%d, %d) to (%d, %d) = %d\t",sx,sy,x2,y2,sh_dist[sx][sy][x2][y2]);
-//                System.out.printf("Shortest Distance from (%d, %d) to (%d, %d) = %d\n",sx,sy,x2,y2,sh_dist[x2][y2][sx][sy]);
-//            }
-//        }
-        long t1 = System.nanoTime();
-//        System.out.printf("%.6f\n", (t1-t0)/1e9);
-    }
-
-    public int est_MaxDepth_sol(State state){
-        int md = 100;
-        int dist = -1;
-        for (int i=0; i<state.hostagesDamage.size(); i++){
-            int d = state.hostagesDamage.get(i);
-            int x = state.hostagesX.get(i);
-            int y = state.hostagesY.get(i);
-            int saveDist = sh_dist[state.neoX][state.neoY][x][y];
-            dist = Math.max(dist, saveDist);
-            md = Math.min(md, d);
-        }
-        int ans = (int)Math.ceil(1.0*(100-md)/2) + state.pillsX.size()*10 + dist + MatrixConfig.M * MatrixConfig.N * state.hostagesX.size();
-//        System.out.println("Est max depth= "+ans);
-        return ans;
-    }
-    public int old_est_MaxDepth_sol(State state){
-        int md = 100;
-        int dist = -1;
-        for (int i=0; i<state.hostagesDamage.size(); i++){
-            int d = state.hostagesDamage.get(i);
-            int x = state.hostagesX.get(i);
-            int y = state.hostagesY.get(i);
-            int saveDist = sh_dist[state.neoX][state.neoY][x][y] + sh_dist[x][y][MatrixConfig.telephoneX][MatrixConfig.telephoneY];
-            dist = Math.max(dist, saveDist);
-            md = Math.min(md, d);
-        }
-
-        int ans = (int)Math.ceil(1.0*(100-md)/2) + state.pillsX.size()*10 + dist;
-//        System.out.println("Est max depth= "+ans);
-        return ans;
-    }
 
     public Matrix(String problem) {
         this.initialState = ProblemParser.parseProblem(problem);
         this.operators = Action.values();
         int maxOpValue = -1;
-        for (Operator o : operators){
+        for (Operator o : operators) {
             maxOpValue = Math.max(maxOpValue, o.getConstCost());
         }
         calculate_shortest_distance();
-        MatrixConfig.kills_weight = maxOpValue * est_MaxDepth_sol(new State(initialState)); ;//MatrixConfig.M + MatrixConfig.N;
-        MatrixConfig.death_weight = MatrixConfig.kills_weight * ((MatrixConfig.M * MatrixConfig.N) +1);
+        MatrixConfig.kills_weight = maxOpValue * est_MaxDepth_sol(new State(initialState));
+        ;//MatrixConfig.M + MatrixConfig.N;
+        MatrixConfig.death_weight = MatrixConfig.kills_weight * ((MatrixConfig.M * MatrixConfig.N) + 1);
 //        System.out.println(Arrays.toString(operators));
     }
-
-    @Override
-    public boolean goalTestFUnction(State state) {
-        return state.neoX == MatrixConfig.telephoneX
-                && state.neoY == MatrixConfig.telephoneY
-                && state.hostagesDamage.size() == 0
-                && state.carriedDamage.size() == 0
-                && state.mutatedX.size() == 0;
-    }
-
-//    @Override
-//    public int pathCostFUnction(Operator operator) {
-//        Action action = (Action) operator;
-//        if (action==Action.KILL)
-//            return 30;
-//        else if (action==Action.CARRY)
-//            return 8;
-//        else if (action==Action.UP || action==Action.DOWN || action==Action.RIGHT || action==Action.LEFT)
-//            return 4;
-//        else if (action==Action.FLY)
-//            return 3;
-//        else if (action==Action.DROP)
-//            return 1;
-//        else if(action== Action.TAKE_PILL)
-//            return 2;
-//        return 0;
-//    }
-
-//    @Override
-//    public int pathCostFUnction(String stateString) {
-//        State state = new State(stateString);
-//        int distance_to_tb = Math.abs(state.neoX - MatrixConfig.telephoneX) + Math.abs(state.neoY - MatrixConfig.telephoneY);
-//        return state.countDead * death_weight + state.countKilled * kills_weight + distance_to_tb;
-//    }
-
-    @Override
-    public String problemOutput(Node goal) {
-        State state = new State(goal.state);
-        String[] ac = constructPlan(goal);
-//        System.out.println(ac.length);
-        String plan = String.join(",", ac);
-        System.out.println(state.countDead + "\t" + state.countKilled + "\t" + this.expandedNodesCnt);
-        return plan + ";" + state.countDead + ";" + state.countKilled + ";" + this.expandedNodesCnt;
-    }
-    @Override
-    public int heuristic_3(Node node) {
-        State state = new State(node.state);
-        int h = 0;
-        int mutants_to_kill = state.mutatedX.size();
-        int resotredByPills = 20 * state.pillsX.size();
-        int hostages_to_die = 0;
-        for (int i=0 ; i<state.hostagesX.size(); i++){
-            int hx = state.hostagesX.get(i);
-            int hy = state.hostagesY.get(i);
-            int hd = state.hostagesDamage.get(i);
-            int distanceToSave = sh_dist[state.neoX][state.neoY][hx][hy] + 1 + sh_dist[hx][hy][MatrixConfig.telephoneX][MatrixConfig.telephoneY] + 1;
-            int futureDamage = distanceToSave*2;
-            if (hd + futureDamage - resotredByPills > 100){
-                hostages_to_die ++;
-            }
-        }
-        int distanceToSave = sh_dist[state.neoX][state.neoY][MatrixConfig.telephoneX][MatrixConfig.telephoneY];
-        int futureDamage = distanceToSave*2;
-        for (int i=0 ; i<state.carriedDamage.size(); i++){
-            int hd = state.carriedDamage.get(i);
-            if (hd + futureDamage - resotredByPills > 100){
-                hostages_to_die ++;
-            }
-        }
-        int distance_to_tb = sh_dist[state.neoX][state.neoY][MatrixConfig.telephoneX][MatrixConfig.telephoneY];
-        int dropCost = state.carriedDamage.size()>0?Action.DROP.getConstCost():0;
-        h = MatrixConfig.death_weight * hostages_to_die + MatrixConfig.kills_weight * mutants_to_kill + distance_to_tb * Action.UP.getConstCost() + dropCost;
-        return h;
-    }
-
-
-
-    @Override
-    public int heuristic_1(Node node) {
-        State state = new State(node.state);
-        int h = 0;
-        int mutants_to_kill = state.mutatedX.size();
-        int carried = state.carriedDamage.size();
-        int alive_hostages = state.hostagesX.size();
-        int h1 = sh_dist[state.neoX][state.neoY][MatrixConfig.telephoneX][MatrixConfig.telephoneY] * Action.UP.getConstCost();
-        int h2 = carried>0?  Action.DROP.getConstCost() : 0;
-        int h3 = mutants_to_kill * MatrixConfig.kills_weight;
-        int h4 = alive_hostages * Action.CARRY.getConstCost();
-        h = h1 + h2 + h3 + h4;
-        return h;
-    }
-
-    @Override
-    public int heuristic_2(Node node) {
-//        long t0 = System.nanoTime();
-        State state = new State(node.state);
-        int h = 0;
-        int mutants_to_kill = state.mutatedX.size();
-        int expected_moves = 0;
-        for (int i=0 ; i<state.hostagesX.size(); i++){
-            int hx = state.hostagesX.get(i);
-            int hy = state.hostagesY.get(i);
-            int d = sh_dist[state.neoX][state.neoY][hx][hy] + sh_dist[hx][hy][MatrixConfig.telephoneX][MatrixConfig.telephoneY];
-            expected_moves = Math.max(expected_moves, d);
-        }
-        if (state.hostagesX.isEmpty()){
-            expected_moves = sh_dist[state.neoX][state.neoY][MatrixConfig.telephoneX][MatrixConfig.telephoneY];
-        }
-        int h1 = expected_moves * Action.UP.getConstCost();
-        int h2 = state.carriedDamage.size()>0?Action.DROP.getConstCost():0;
-        int h3 = mutants_to_kill*MatrixConfig.kills_weight;
-        h =  h1 + h2 + h3;
-//        long t1 = System.nanoTime();
-//        System.out.printf("h1: %.8f\n", (t1-t0)/1e9);
-        return h;
-    }
-
-
-//    @Override
-//    public int heuristic_3(Node node) {
-//        State state = new State(node.state);
-//        int totEst = 0;
-//        for (int i = 0; i < state.hostagesDamage.size(); i++) {
-//            int hx = state.hostagesX.get(i);
-//            int hy = state.hostagesY.get(i);
-//             int hd = state.hostagesDamage.get(i);
-//            int tx = MatrixConfig.telephoneX;
-//            int ty = MatrixConfig.telephoneY;
-//            int distance = (int) (Math.abs(hx - tx) + Math.abs(hy - ty));
-//            totEst += distance* hd;
-//        }
-//        return totEst;
-//    }
-//
-//    @Override
-//    public int heuristic_4(Node node) {
-//        State state = new State(node.state);
-//        int sum = 0;
-//        for (int i = 0; i < state.hostagesDamage.size(); i++) {
-//            sum += state.hostagesDamage.get(i);
-//        }
-//        for (int i = 0; i < state.carriedDamage.size(); i++) {
-//            if (state.carriedDamage.get(i)<100)
-//                sum += state.carriedDamage.get(i);
-//        }
-//        return sum;
-//    }
-//
-//    @Override
-//    public int heuristic_5(Node node) {
-//        State state = new State(node.state);
-//        int totEst = 0;
-//        for (int i = 0; i < state.hostagesDamage.size(); i++) {
-//            int hx = state.hostagesX.get(i);
-//            int hy = state.hostagesY.get(i);
-//            // int hd = state.hostagesDamage.get(i);
-//            int tx = MatrixConfig.telephoneX;
-//            int ty = MatrixConfig.telephoneY;
-//            int distance = (int) (Math.abs(hx - tx) + Math.abs(hy - ty));
-//            totEst += distance;//* hd;
-//        }
-//        return totEst;
-//    }
 
     public static String genGrid() {
         StringBuilder sb = new StringBuilder();
@@ -387,7 +154,7 @@ public class Matrix extends SearchProblem {
         String s;
         long t0, t1;
 //        for (String cas : cases) {
-        for (int i=0;i<5;i++){
+        for (int i = 0; i < 5; i++) {
             String cas = genGrid();
             System.out.println(cas);
             t0 = System.nanoTime();
@@ -402,6 +169,241 @@ public class Matrix extends SearchProblem {
             System.out.println("CPU Utilization: " + String.format("%.02f", cpuLoad) + "%");
             System.out.println("Memory Utilization: " + String.format("%.02f", (float) (total - free) / total * 100) + "%");
         }
+    }
+
+    void calculate_shortest_distance() {
+        long t0 = System.nanoTime();
+        int m = MatrixConfig.M;
+        int n = MatrixConfig.N;
+        sh_dist = new int[m][n][m][n];
+        for (int i = 0; i < m; i++)
+            for (int j = 0; j < n; j++)
+                for (int k = 0; k < m; k++)
+                    Arrays.fill(sh_dist[i][j][k], Integer.MAX_VALUE);
+        for (int x1 = 0; x1 < m; x1++) {
+            for (int y1 = 0; y1 < n; y1++) {
+                for (int x2 = 0; x2 < m; x2++) {
+                    for (int y2 = 0; y2 < n; y2++) {
+                        int d1 = Math.abs(x2 - x1) + Math.abs(y2 - y1);
+                        for (int i = 0; i < MatrixConfig.startPadsX.length; i++) {
+                            int p1x = MatrixConfig.startPadsX[i];
+                            int p1y = MatrixConfig.startPadsY[i];
+                            int p2x = MatrixConfig.finishPadsX[i];
+                            int p2y = MatrixConfig.finishPadsY[i];
+                            int d2_1 = Math.abs(p1x - x1) + Math.abs(p1y - y1);
+                            int d2_2 = Math.abs(p2x - x2) + Math.abs(p2y - y2);
+                            int d2 = d2_1 + d2_2 + 1;
+                            int cur_min = Math.min(d1, d2);
+                            sh_dist[x1][y1][x2][y2] = Math.min(sh_dist[x1][y1][x2][y2], cur_min);
+                        }
+                    }
+                }
+            }
+        }
+//        int sx=2, sy= 0;
+//        for (int x2=0; x2<m; x2++){
+//            for (int y2=0; y2<n; y2++) {
+//                System.out.printf("Shortest Distance from (%d, %d) to (%d, %d) = %d\t",sx,sy,x2,y2,sh_dist[sx][sy][x2][y2]);
+//                System.out.printf("Shortest Distance from (%d, %d) to (%d, %d) = %d\n",sx,sy,x2,y2,sh_dist[x2][y2][sx][sy]);
+//            }
+//        }
+        long t1 = System.nanoTime();
+//        System.out.printf("%.6f\n", (t1-t0)/1e9);
+    }
+
+//    @Override
+//    public int pathCostFUnction(Operator operator) {
+//        Action action = (Action) operator;
+//        if (action==Action.KILL)
+//            return 30;
+//        else if (action==Action.CARRY)
+//            return 8;
+//        else if (action==Action.UP || action==Action.DOWN || action==Action.RIGHT || action==Action.LEFT)
+//            return 4;
+//        else if (action==Action.FLY)
+//            return 3;
+//        else if (action==Action.DROP)
+//            return 1;
+//        else if(action== Action.TAKE_PILL)
+//            return 2;
+//        return 0;
+//    }
+
+//    @Override
+//    public int pathCostFUnction(String stateString) {
+//        State state = new State(stateString);
+//        int distance_to_tb = Math.abs(state.neoX - MatrixConfig.telephoneX) + Math.abs(state.neoY - MatrixConfig.telephoneY);
+//        return state.countDead * death_weight + state.countKilled * kills_weight + distance_to_tb;
+//    }
+
+    public int est_MaxDepth_sol(State state) {
+        int md = 100;
+        int dist = -1;
+        for (int i = 0; i < state.hostagesDamage.size(); i++) {
+            int d = state.hostagesDamage.get(i);
+            int x = state.hostagesX.get(i);
+            int y = state.hostagesY.get(i);
+            int saveDist = sh_dist[state.neoX][state.neoY][x][y];
+            dist = Math.max(dist, saveDist);
+            md = Math.min(md, d);
+        }
+        int ans = (int) Math.ceil(1.0 * (100 - md) / 2) + state.pillsX.size() * 10 + dist + MatrixConfig.M * MatrixConfig.N * state.hostagesX.size();
+//        System.out.println("Est max depth= "+ans);
+        return ans;
+    }
+
+    public int old_est_MaxDepth_sol(State state) {
+        int md = 100;
+        int dist = -1;
+        for (int i = 0; i < state.hostagesDamage.size(); i++) {
+            int d = state.hostagesDamage.get(i);
+            int x = state.hostagesX.get(i);
+            int y = state.hostagesY.get(i);
+            int saveDist = sh_dist[state.neoX][state.neoY][x][y] + sh_dist[x][y][MatrixConfig.telephoneX][MatrixConfig.telephoneY];
+            dist = Math.max(dist, saveDist);
+            md = Math.min(md, d);
+        }
+
+        int ans = (int) Math.ceil(1.0 * (100 - md) / 2) + state.pillsX.size() * 10 + dist;
+//        System.out.println("Est max depth= "+ans);
+        return ans;
+    }
+
+    @Override
+    public boolean goalTestFUnction(State state) {
+        return state.neoX == MatrixConfig.telephoneX
+                && state.neoY == MatrixConfig.telephoneY
+                && state.hostagesDamage.size() == 0
+                && state.carriedDamage.size() == 0
+                && state.mutatedX.size() == 0;
+    }
+
+    @Override
+    public String problemOutput(Node goal) {
+        State state = new State(goal.state);
+        String[] ac = constructPlan(goal);
+//        System.out.println(ac.length);
+        String plan = String.join(",", ac);
+        System.out.println(state.countDead + "\t" + state.countKilled + "\t" + this.expandedNodesCnt);
+        return plan + ";" + state.countDead + ";" + state.countKilled + ";" + this.expandedNodesCnt;
+    }
+
+
+//    @Override
+//    public int heuristic_3(Node node) {
+//        State state = new State(node.state);
+//        int totEst = 0;
+//        for (int i = 0; i < state.hostagesDamage.size(); i++) {
+//            int hx = state.hostagesX.get(i);
+//            int hy = state.hostagesY.get(i);
+//             int hd = state.hostagesDamage.get(i);
+//            int tx = MatrixConfig.telephoneX;
+//            int ty = MatrixConfig.telephoneY;
+//            int distance = (int) (Math.abs(hx - tx) + Math.abs(hy - ty));
+//            totEst += distance* hd;
+//        }
+//        return totEst;
+//    }
+//
+//    @Override
+//    public int heuristic_4(Node node) {
+//        State state = new State(node.state);
+//        int sum = 0;
+//        for (int i = 0; i < state.hostagesDamage.size(); i++) {
+//            sum += state.hostagesDamage.get(i);
+//        }
+//        for (int i = 0; i < state.carriedDamage.size(); i++) {
+//            if (state.carriedDamage.get(i)<100)
+//                sum += state.carriedDamage.get(i);
+//        }
+//        return sum;
+//    }
+//
+//    @Override
+//    public int heuristic_5(Node node) {
+//        State state = new State(node.state);
+//        int totEst = 0;
+//        for (int i = 0; i < state.hostagesDamage.size(); i++) {
+//            int hx = state.hostagesX.get(i);
+//            int hy = state.hostagesY.get(i);
+//            // int hd = state.hostagesDamage.get(i);
+//            int tx = MatrixConfig.telephoneX;
+//            int ty = MatrixConfig.telephoneY;
+//            int distance = (int) (Math.abs(hx - tx) + Math.abs(hy - ty));
+//            totEst += distance;//* hd;
+//        }
+//        return totEst;
+//    }
+
+    @Override
+    public int heuristic_3(Node node) {
+        State state = new State(node.state);
+        int h = 0;
+        int mutants_to_kill = state.mutatedX.size();
+        int resotredByPills = 20 * state.pillsX.size();
+        int hostages_to_die = 0;
+        for (int i = 0; i < state.hostagesX.size(); i++) {
+            int hx = state.hostagesX.get(i);
+            int hy = state.hostagesY.get(i);
+            int hd = state.hostagesDamage.get(i);
+            int distanceToSave = sh_dist[state.neoX][state.neoY][hx][hy] + 1 + sh_dist[hx][hy][MatrixConfig.telephoneX][MatrixConfig.telephoneY] + 1;
+            int futureDamage = distanceToSave * 2;
+            if (hd + futureDamage - resotredByPills > 100) {
+                hostages_to_die++;
+            }
+        }
+        int distanceToSave = sh_dist[state.neoX][state.neoY][MatrixConfig.telephoneX][MatrixConfig.telephoneY];
+        int futureDamage = distanceToSave * 2;
+        for (int i = 0; i < state.carriedDamage.size(); i++) {
+            int hd = state.carriedDamage.get(i);
+            if (hd + futureDamage - resotredByPills > 100) {
+                hostages_to_die++;
+            }
+        }
+        int distance_to_tb = sh_dist[state.neoX][state.neoY][MatrixConfig.telephoneX][MatrixConfig.telephoneY];
+        int dropCost = state.carriedDamage.size() > 0 ? Action.DROP.getConstCost() : 0;
+        h = MatrixConfig.death_weight * hostages_to_die + MatrixConfig.kills_weight * mutants_to_kill + distance_to_tb * Action.UP.getConstCost() + dropCost;
+        return h;
+    }
+
+    @Override
+    public int heuristic_1(Node node) {
+        State state = new State(node.state);
+        int h = 0;
+        int mutants_to_kill = state.mutatedX.size();
+        int carried = state.carriedDamage.size();
+        int alive_hostages = state.hostagesX.size();
+        int h1 = sh_dist[state.neoX][state.neoY][MatrixConfig.telephoneX][MatrixConfig.telephoneY] * Action.UP.getConstCost();
+        int h2 = carried > 0 ? Action.DROP.getConstCost() : 0;
+        int h3 = mutants_to_kill * MatrixConfig.kills_weight;
+        int h4 = alive_hostages * Action.CARRY.getConstCost();
+        h = h1 + h2 + h3 + h4;
+        return h;
+    }
+
+    @Override
+    public int heuristic_2(Node node) {
+//        long t0 = System.nanoTime();
+        State state = new State(node.state);
+        int h = 0;
+        int mutants_to_kill = state.mutatedX.size();
+        int expected_moves = 0;
+        for (int i = 0; i < state.hostagesX.size(); i++) {
+            int hx = state.hostagesX.get(i);
+            int hy = state.hostagesY.get(i);
+            int d = sh_dist[state.neoX][state.neoY][hx][hy] + sh_dist[hx][hy][MatrixConfig.telephoneX][MatrixConfig.telephoneY];
+            expected_moves = Math.max(expected_moves, d);
+        }
+        if (state.hostagesX.isEmpty()) {
+            expected_moves = sh_dist[state.neoX][state.neoY][MatrixConfig.telephoneX][MatrixConfig.telephoneY];
+        }
+        int h1 = expected_moves * Action.UP.getConstCost();
+        int h2 = state.carriedDamage.size() > 0 ? Action.DROP.getConstCost() : 0;
+        int h3 = mutants_to_kill * MatrixConfig.kills_weight;
+        h = h1 + h2 + h3;
+//        long t1 = System.nanoTime();
+//        System.out.printf("h1: %.8f\n", (t1-t0)/1e9);
+        return h;
     }
 }
 

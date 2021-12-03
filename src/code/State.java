@@ -13,92 +13,6 @@ public class State {
     ArrayList<Integer> carriedDamage;
     ArrayList<Integer> mutatedX, mutatedY;
 
-    public String decodeState() {
-        String[] agents = new String[agentsX.size() * 2];
-        for (int i = 0; i < agentsX.size(); i++) {
-            agents[i * 2] = "" + agentsX.get(i);
-            agents[i * 2 + 1] = "" + agentsY.get(i);
-        }
-
-        String[] pills = new String[pillsX.size() * 2];
-        for (int i = 0; i < pillsX.size(); i++) {
-            pills[i * 2] = "" + pillsX.get(i);
-            pills[i * 2 + 1] = "" + pillsY.get(i);
-        }
-
-        String[] hostages = new String[hostagesX.size() * 3];
-        for (int i = 0; i < hostagesX.size(); i++) {
-            hostages[i * 3] = "" + hostagesX.get(i);
-            hostages[i * 3 + 1] = "" + hostagesY.get(i);
-            hostages[i * 3 + 2] = "" + hostagesDamage.get(i);
-        }
-
-        String[] carried = new String[carriedDamage.size()];
-        for (int i = 0; i < carriedDamage.size(); i++) {
-            carried[i] = "" + carriedDamage.get(i);
-        }
-
-        String[] mutated = new String[mutatedX.size() * 2];
-        for (int i = 0; i < mutatedX.size(); i++) {
-            mutated[i * 2] = "" + mutatedX.get(i);
-            mutated[i * 2 + 1] = "" + mutatedY.get(i);
-        }
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(String.format("%d,%d,%d;", neoX, neoY, neoDamage));
-        sb.append(String.format("%d;", countKilled));
-        sb.append(String.join(",", agents)).append(";");
-        sb.append(String.join(",", pills)).append(";");
-        sb.append(String.format("%d;", countDead));
-        sb.append(String.join(",", hostages)).append(";");
-        sb.append(String.join(",", carried)).append(";");
-        sb.append(String.join(",", mutated));
-
-        return sb.toString();
-    }
-    public String decodeDamagelessState() {
-        String[] agents = new String[agentsX.size() * 2];
-        for (int i = 0; i < agentsX.size(); i++) {
-            agents[i * 2] = "" + agentsX.get(i);
-            agents[i * 2 + 1] = "" + agentsY.get(i);
-        }
-
-        String[] pills = new String[pillsX.size() * 2];
-        for (int i = 0; i < pillsX.size(); i++) {
-            pills[i * 2] = "" + pillsX.get(i);
-            pills[i * 2 + 1] = "" + pillsY.get(i);
-        }
-
-        String[] hostages = new String[hostagesX.size() * 2];
-        for (int i = 0; i < hostagesX.size(); i++) {
-            hostages[i * 2] = "" + hostagesX.get(i);
-            hostages[i * 2 + 1] = "" + hostagesY.get(i);
-        }
-
-        String[] carried = new String[carriedDamage.size()];
-        for (int i = 0; i < carriedDamage.size(); i++) {
-            carried[i] = "C";//carriedDamage.get(i);
-        }
-
-        String[] mutated = new String[mutatedX.size() * 2];
-        for (int i = 0; i < mutatedX.size(); i++) {
-            mutated[i * 2] = "" + mutatedX.get(i);
-            mutated[i * 2 + 1] = "" + mutatedY.get(i);
-        }
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(String.format("%d,%d,%d;", neoX, neoY, neoDamage));
-        sb.append(String.format("%d;", countKilled));
-        sb.append(String.join(",", agents)).append(";");
-        sb.append(String.join(",", pills)).append(";");
-        sb.append(String.format("%d;", countDead));
-        sb.append(String.join(",", hostages)).append(";");
-        sb.append(String.join(",", carried)).append(";");
-        sb.append(String.join(",", mutated));
-
-        return sb.toString();
-    }
-
     public State(String stateString) {
         String[] entries = stateString.split(";", -1);
 
@@ -157,10 +71,97 @@ public class State {
         }
     }
 
+    public String decodeState() {
+        String[] agents = new String[agentsX.size() * 2];
+        for (int i = 0; i < agentsX.size(); i++) {
+            agents[i * 2] = "" + agentsX.get(i);
+            agents[i * 2 + 1] = "" + agentsY.get(i);
+        }
+
+        String[] pills = new String[pillsX.size() * 2];
+        for (int i = 0; i < pillsX.size(); i++) {
+            pills[i * 2] = "" + pillsX.get(i);
+            pills[i * 2 + 1] = "" + pillsY.get(i);
+        }
+
+        String[] hostages = new String[hostagesX.size() * 3];
+        for (int i = 0; i < hostagesX.size(); i++) {
+            hostages[i * 3] = "" + hostagesX.get(i);
+            hostages[i * 3 + 1] = "" + hostagesY.get(i);
+            hostages[i * 3 + 2] = "" + hostagesDamage.get(i);
+        }
+
+        String[] carried = new String[carriedDamage.size()];
+        for (int i = 0; i < carriedDamage.size(); i++) {
+            carried[i] = "" + carriedDamage.get(i);
+        }
+
+        String[] mutated = new String[mutatedX.size() * 2];
+        for (int i = 0; i < mutatedX.size(); i++) {
+            mutated[i * 2] = "" + mutatedX.get(i);
+            mutated[i * 2 + 1] = "" + mutatedY.get(i);
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("%d,%d,%d;", neoX, neoY, neoDamage));
+        sb.append(String.format("%d;", countKilled));
+        sb.append(String.join(",", agents)).append(";");
+        sb.append(String.join(",", pills)).append(";");
+        sb.append(String.format("%d;", countDead));
+        sb.append(String.join(",", hostages)).append(";");
+        sb.append(String.join(",", carried)).append(";");
+        sb.append(String.join(",", mutated));
+
+        return sb.toString();
+    }
+
+    public String decodeDamagelessState() {
+        String[] agents = new String[agentsX.size() * 2];
+        for (int i = 0; i < agentsX.size(); i++) {
+            agents[i * 2] = "" + agentsX.get(i);
+            agents[i * 2 + 1] = "" + agentsY.get(i);
+        }
+
+        String[] pills = new String[pillsX.size() * 2];
+        for (int i = 0; i < pillsX.size(); i++) {
+            pills[i * 2] = "" + pillsX.get(i);
+            pills[i * 2 + 1] = "" + pillsY.get(i);
+        }
+
+        String[] hostages = new String[hostagesX.size() * 2];
+        for (int i = 0; i < hostagesX.size(); i++) {
+            hostages[i * 2] = "" + hostagesX.get(i);
+            hostages[i * 2 + 1] = "" + hostagesY.get(i);
+        }
+
+        String[] carried = new String[carriedDamage.size()];
+        for (int i = 0; i < carriedDamage.size(); i++) {
+            carried[i] = "C";//carriedDamage.get(i);
+        }
+
+        String[] mutated = new String[mutatedX.size() * 2];
+        for (int i = 0; i < mutatedX.size(); i++) {
+            mutated[i * 2] = "" + mutatedX.get(i);
+            mutated[i * 2 + 1] = "" + mutatedY.get(i);
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("%d,%d,%d;", neoX, neoY, neoDamage));
+        sb.append(String.format("%d;", countKilled));
+        sb.append(String.join(",", agents)).append(";");
+        sb.append(String.join(",", pills)).append(";");
+        sb.append(String.format("%d;", countDead));
+        sb.append(String.join(",", hostages)).append(";");
+        sb.append(String.join(",", carried)).append(";");
+        sb.append(String.join(",", mutated));
+
+        return sb.toString();
+    }
+
     @SuppressWarnings("all")
     public boolean isCellDangerous(int x, int y) {
 
-        return doesAgentExist(x, y) || doesMutatedExist(x, y)|| willMutatedExist(x, y);
+        return doesAgentExist(x, y) || doesMutatedExist(x, y) || willMutatedExist(x, y);
     }
 
     public boolean doesAgentExist(int x, int y) {
@@ -180,6 +181,7 @@ public class State {
         }
         return false;
     }
+
     public boolean doesMutatedExist(int x, int y) {
         for (int i = 0; i < mutatedX.size(); i++) {
             if (mutatedX.get(i) == x && mutatedY.get(i) == y) {
@@ -234,7 +236,7 @@ public class State {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder builder = new StringBuilder();
         int neoX = this.neoX;
         int neoY = this.neoY;
