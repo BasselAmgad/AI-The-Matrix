@@ -26,7 +26,7 @@ public class report {
 
     @Test(timeout = 10000)
     public void testa3() throws Exception {
-        System.gc();
+
         com.sun.management.OperatingSystemMXBean oss = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         System.out.print(name.getMethodName() + "\t");
         String solution = Matrix.solve(grid3, "BF", false);
@@ -41,7 +41,7 @@ public class report {
 
     @Test(timeout = 30000)
     public void testa8() throws Exception {
-        System.gc();
+
         com.sun.management.OperatingSystemMXBean oss = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         System.out.print(name.getMethodName() + "\t");
         String solution = Matrix.solve(grid8, "BF", false);
@@ -56,7 +56,7 @@ public class report {
 
     @Test(timeout = 10000)
     public void testb3() throws Exception {
-        System.gc();
+
         com.sun.management.OperatingSystemMXBean oss = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         System.out.print(name.getMethodName() + "\t");
         String solution = Matrix.solve(grid3, "DF", false);
@@ -71,7 +71,7 @@ public class report {
 
     @Test(timeout = 30000)
     public void testb8() throws Exception {
-        System.gc();
+
         com.sun.management.OperatingSystemMXBean oss = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         System.out.print(name.getMethodName() + "\t");
         String solution = Matrix.solve(grid8, "DF", false);
@@ -86,7 +86,7 @@ public class report {
 
     @Test(timeout = 10000)
     public void testc3() throws Exception {
-        System.gc();
+
         com.sun.management.OperatingSystemMXBean oss = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         System.out.print(name.getMethodName() + "\t");
         String solution = Matrix.solve(grid3, "UC", false);
@@ -101,7 +101,7 @@ public class report {
 
     @Test(timeout = 10000)
     public void testd3() throws Exception {
-        System.gc();
+
         com.sun.management.OperatingSystemMXBean oss = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         System.out.print(name.getMethodName() + "\t");
         String solution = Matrix.solve(grid3, "ID", false);
@@ -116,7 +116,7 @@ public class report {
 
     @Test(timeout = 10000)
     public void testd8() throws Exception {
-        System.gc();
+
         com.sun.management.OperatingSystemMXBean oss = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         System.out.print(name.getMethodName() + "\t");
         String solution = Matrix.solve(grid8, "ID", false);
@@ -132,7 +132,7 @@ public class report {
 
     @Test(timeout = 10000)
     public void teste3() throws Exception {
-        System.gc();
+
         com.sun.management.OperatingSystemMXBean oss = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         System.out.print(name.getMethodName() + "\t");
         String solution = Matrix.solve(grid3, "GR1", false);
@@ -147,7 +147,7 @@ public class report {
 
     @Test(timeout = 400000)
     public void teste8() throws Exception {
-        System.gc();
+
         com.sun.management.OperatingSystemMXBean oss = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         System.out.print(name.getMethodName() + "\t");
         String solution = Matrix.solve(grid8, "GR1", false);
@@ -162,7 +162,7 @@ public class report {
 
     @Test(timeout = 10000)
     public void testf3() throws Exception {
-        System.gc();
+
         com.sun.management.OperatingSystemMXBean oss = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         System.out.print(name.getMethodName() + "\t");
         String solution = Matrix.solve(grid3, "GR2", false);
@@ -177,7 +177,7 @@ public class report {
 
     @Test(timeout = 400000)
     public void testf8() throws Exception {
-        System.gc();
+
         com.sun.management.OperatingSystemMXBean oss = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         System.out.print(name.getMethodName() + "\t");
         String solution = Matrix.solve(grid8, "GR2", false);
@@ -192,7 +192,7 @@ public class report {
 
     @Test(timeout = 10000)
     public void testg3() throws Exception {
-        System.gc();
+
         com.sun.management.OperatingSystemMXBean oss = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         System.out.print(name.getMethodName() + "\t");
         String solution = Matrix.solve(grid3, "AS1", false);
@@ -207,7 +207,7 @@ public class report {
 
     @Test(timeout = 400000)
     public void testg8() throws Exception {
-        System.gc();
+
         com.sun.management.OperatingSystemMXBean oss = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         System.out.print(name.getMethodName() + "\t");
         String solution = Matrix.solve(grid8, "AS1", false);
@@ -222,7 +222,7 @@ public class report {
 
     @Test(timeout = 10000)
     public void testh3() throws Exception {
-        System.gc();
+
         com.sun.management.OperatingSystemMXBean oss = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         System.out.print(name.getMethodName() + "\t");
         String solution = Matrix.solve(grid3, "AS2", false);
@@ -237,7 +237,7 @@ public class report {
 
     @Test(timeout = 400000)
     public void testh8() throws Exception {
-        System.gc();
+
         com.sun.management.OperatingSystemMXBean oss = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         System.out.print(name.getMethodName() + "\t");
         String solution = Matrix.solve(grid8, "AS2", false);

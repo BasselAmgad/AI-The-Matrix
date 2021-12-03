@@ -54,15 +54,10 @@ public class Matrix extends SearchProblem {
             int d = state.hostagesDamage.get(i);
             int x = state.hostagesX.get(i);
             int y = state.hostagesY.get(i);
-//            int killDist = sh_dist[state.neoX][state.neoY][x][y];
             int saveDist = sh_dist[state.neoX][state.neoY][x][y] + sh_dist[x][y][MatrixConfig.telephoneX][MatrixConfig.telephoneY];
             dist = Math.max(dist, saveDist);
             md = Math.min(md, d);
         }
-//        for (int i=0; i<state.carriedDamage.size(); i++){
-//            int d = state.carriedDamage.get(i);
-//            md = Math.min(md, d);
-//        }
 
         int ans = (int)Math.ceil(1.0*(100-md)/2) + state.pillsX.size()*10 + dist;
 //        System.out.println("Est max depth= "+ans);
