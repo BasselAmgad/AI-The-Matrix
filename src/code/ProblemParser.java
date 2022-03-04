@@ -44,7 +44,6 @@ public final class ProblemParser {
         String[] carried = new String[0];
         String[] mutated = new String[0];
 
-//        State initialState = new State(neoX, neoY, 0, new int[carryCapacity], pillsX, pillsY, agentsX, agentsY, hostagesX, hostagesY, hostagesDamage);
 
         MatrixConfig.M = M;
         MatrixConfig.N = N;
