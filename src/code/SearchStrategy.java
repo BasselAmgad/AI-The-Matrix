@@ -15,14 +15,15 @@ public enum SearchStrategy implements SearchProcedure {
     DF {
         @Override
         public String search(SearchProblem problem) {
-            return problem.genericSearchProcedure(new DfsQueue<>());
+            Comparator<MNode> comp = Comparator.comparingInt(node -> -node.depth);
+            return problem.genericSearchProcedure(comp);
         }
     },
     ID {
         @Override
         public String search(SearchProblem problem) {
             int limit = 0;
-            while (true) {//TODO: check that the maximum depth of an actually expanded node is l
+            while (true) {
                 String result = problem.DepthLimitedSearch(limit);
                 if (result.equals("empty")) {
                     return "No Solution";
