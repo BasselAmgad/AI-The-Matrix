@@ -1,21 +1,22 @@
 package code.queue;
 
+import code.MNode;
 import code.Node;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
-public class UcQueue implements GenericQueue<Node> {
+public class UcQueue implements GenericQueue<MNode> {
 
-    private final PriorityQueue<Node> queue = new PriorityQueue<>(Comparator.comparingInt(node -> node.pathCost));
+    private final PriorityQueue<MNode> queue = new PriorityQueue<>(Comparator.comparingInt(node -> node.pathCost));
 
     @Override
-    public void add(Node node) {
+    public void add(MNode node) {
         queue.add(node);
     }
 
     @Override
-    public Node poll() {
+    public MNode poll() {
         return queue.poll();
     }
 

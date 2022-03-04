@@ -23,7 +23,7 @@ public abstract class SearchProblem {
     public abstract int heuristic_1(MNode node);
     public abstract int heuristic_2(MNode node);
 
-    public String genericSearchProcedure(GenericQueue<Node> queue) {
+    public String genericSearchProcedure(GenericQueue<MNode> queue) {
         this.visitedStates = new HashSet<>();
         this.expandedNodesCnt = 0;
 
@@ -47,7 +47,7 @@ public abstract class SearchProblem {
         this.visitedStates = new HashSet<>();
         if (limit == 0)
             this.expandedNodesCnt = 0;
-        GenericQueue<Node> queue = new DfsQueue<>();
+        GenericQueue<MNode> queue = new DfsQueue<>();
 
         MNode root = new MNode(initialState, null, null, 0, 0);
         queue.add(root);

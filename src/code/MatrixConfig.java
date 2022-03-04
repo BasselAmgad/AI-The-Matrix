@@ -10,7 +10,6 @@ public final class MatrixConfig {
     public static int carryCapacity; // <=4
 
     public static int[] startPadsX, startPadsY, finishPadsX, finishPadsY;
-    public static int expandedNodesCnt;
 
     public static int death_weight, kills_weight;
 

@@ -1,26 +1,26 @@
 package code.queue;
 
-import code.Node;
+import code.MNode;
 import code.SearchProblem;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
-public class As2Queue implements GenericQueue<Node> {
+public class As2Queue implements GenericQueue<MNode> {
 
-    private final PriorityQueue<Node> queue;
+    private final PriorityQueue<MNode> queue;
 
     public As2Queue(SearchProblem problem) {
         queue = new PriorityQueue<>(Comparator.comparingInt(node -> problem.heuristic_2(node)));
     }
 
     @Override
-    public void add(Node node) {
+    public void add(MNode node) {
         queue.add(node);
     }
 
     @Override
-    public Node poll() {
+    public MNode poll() {
         return queue.poll();
     }
 

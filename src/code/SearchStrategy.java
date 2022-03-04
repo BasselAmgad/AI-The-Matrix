@@ -15,8 +15,7 @@ public enum SearchStrategy implements SearchProcedure {
     DF {
         @Override
         public String search(SearchProblem problem) {
-            Comparator<MNode> comp = Comparator.comparingInt(node -> -node.depth);
-            return problem.genericSearchProcedure(comp);
+            return problem.genericSearchProcedure(new DfsQueue<>());
         }
     },
     ID {
