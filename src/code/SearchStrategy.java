@@ -1,6 +1,6 @@
 package code;
 
-import java.util.Comparator;
+import code.queue.*;
 
 /*
  * An enum used to parse a search strategy string to.
@@ -9,8 +9,7 @@ public enum SearchStrategy implements SearchProcedure {
     BF {
         @Override
         public String search(SearchProblem problem) {
-            Comparator<MNode> comp = Comparator.comparingInt(node -> node.depth);
-            return problem.genericSearchProcedure(comp);
+            return problem.genericSearchProcedure(new BfsQueue<>());
         }
     },
     DF {
@@ -39,36 +38,31 @@ public enum SearchStrategy implements SearchProcedure {
     UC {
         @Override
         public String search(SearchProblem problem) {
-            Comparator<MNode> comp = Comparator.comparingInt(node -> node.pathCost);
-            return problem.genericSearchProcedure(comp);
+            return problem.genericSearchProcedure(new UcQueue());
         }
     },
     GR1 {
         @Override
         public String search(SearchProblem problem) {
-            Comparator<MNode> comp = Comparator.comparingInt(node -> problem.heuristic_1(node));
-            return problem.genericSearchProcedure(comp);
+            return problem.genericSearchProcedure(new Gr1Queue(problem));
         }
     },
     GR2 {
         @Override
         public String search(SearchProblem problem) {
-            Comparator<MNode> comp = Comparator.comparingInt(node -> problem.heuristic_2(node));
-            return problem.genericSearchProcedure(comp);
+            return problem.genericSearchProcedure(new Gr2Queue(problem));
         }
     },
     AS1 {
         @Override
         public String search(SearchProblem problem) {
-            Comparator<MNode> comp = Comparator.comparingInt(node -> node.pathCost + problem.heuristic_1(node));
-            return problem.genericSearchProcedure(comp);
+            return problem.genericSearchProcedure(new As1Queue(problem));
         }
     },
     AS2 {
         @Override
         public String search(SearchProblem problem) {
-            Comparator<MNode> comp = Comparator.comparingInt(node -> node.pathCost + problem.heuristic_2(node));
-            return problem.genericSearchProcedure(comp);
+            return problem.genericSearchProcedure(new As2Queue(problem));
         }
     };
 

@@ -52,16 +52,17 @@ public class Matrix extends SearchProblem {
         return ans;
     }
 
+
     public Matrix(String problem) {
         this.initialState = ProblemParser.parseProblem(problem);
         this.operators = Action.values();
         int maxOpValue = -1;
-        for (Operator o : operators){
+        for (Operator o : operators) {
             maxOpValue = Math.max(maxOpValue, o.getConstCost());
         }
         calculate_shortest_distance();
-        MatrixConfig.kills_weight = maxOpValue * est_MaxDepth_sol(new State(initialState)); ;//MatrixConfig.M + MatrixConfig.N;
-        MatrixConfig.death_weight = MatrixConfig.kills_weight * ((MatrixConfig.M * MatrixConfig.N) +1);
+        MatrixConfig.kills_weight = maxOpValue * est_MaxDepth_sol(new State(initialState));
+        MatrixConfig.death_weight = MatrixConfig.kills_weight * ((MatrixConfig.M * MatrixConfig.N) + 1);
     }
 
     @Override
@@ -119,7 +120,7 @@ public class Matrix extends SearchProblem {
         return h;
     }
 
-    static String genGrid() {
+    public static String genGrid() {
         StringBuilder sb = new StringBuilder();
         int M = 5 + (int) (Math.random() * 11);
         int N = 5 + (int) (Math.random() * 11);

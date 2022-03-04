@@ -1,11 +1,11 @@
 package code;
 
 public abstract class Node {
+    public int pathCost;
     String state;
     MNode parent;
     Operator operator;
     int depth;
-    int pathCost;
 
     public Node(String state, MNode parent, Operator operator, int depth, int pathCost) {
         this.state = state;

@@ -1,6 +1,12 @@
 package code;
 
-import java.util.*;
+import code.queue.DfsQueue;
+import code.queue.GenericQueue;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 
 // Abstract class for defining the search problem
 public abstract class SearchProblem {
@@ -17,11 +23,12 @@ public abstract class SearchProblem {
     public abstract int heuristic_1(MNode node);
     public abstract int heuristic_2(MNode node);
 
-    public String genericSearchProcedure(Comparator<MNode> comp) {
+    public String genericSearchProcedure(GenericQueue<Node> queue) {
         this.visitedStates = new HashSet<>();
         this.expandedNodesCnt = 0;
-        PriorityQueue<MNode> queue = new PriorityQueue<>(comp);
 
+        int maxGoalDepth = -1;
+        int lastDepth = -1;
         MNode root = new MNode(initialState, null, null, 0, 0);
         queue.add(root);
         while (!queue.isEmpty()) {
@@ -40,7 +47,7 @@ public abstract class SearchProblem {
         this.visitedStates = new HashSet<>();
         if (limit == 0)
             this.expandedNodesCnt = 0;
-        PriorityQueue<MNode> queue = new PriorityQueue<>(Comparator.comparingInt(node -> -node.depth));
+        GenericQueue<Node> queue = new DfsQueue<>();
 
         MNode root = new MNode(initialState, null, null, 0, 0);
         queue.add(root);
@@ -89,7 +96,7 @@ public abstract class SearchProblem {
         return seqArr;
     }
 
-    public void expand(PriorityQueue<MNode> queue, MNode currentNode, HashSet<String> visitedStates) {
+    public void expand(GenericQueue queue, MNode currentNode, HashSet<String> visitedStates) {
         List<Operator> ops = Arrays.asList(operators);
 //        Collections.shuffle(ops);
         for (Operator op : ops) {
@@ -100,7 +107,7 @@ public abstract class SearchProblem {
                 int opCost = ((StateResult.NewState) exp).getActionCost();
                 if (!visitedStates.contains(hashString)) {
                     visitedStates.add(hashString);
-                    MNode newNode = new MNode(stateString, currentNode, op, currentNode.depth + 1, currentNode.pathCost+opCost);
+                    MNode newNode = new MNode(stateString, currentNode, op, currentNode.depth + 1, currentNode.pathCost + opCost);
                     queue.add(newNode);
                 }
             }
