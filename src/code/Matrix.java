@@ -7,22 +7,6 @@ import java.util.PriorityQueue;
 
 public class Matrix extends SearchProblem {
 
-//    String Search(State initialState) {
-//        PriorityQueue<Node> queue = new PriorityQueue<>();
-//        Node root = new BST_Node(initialState, null, null, 0, 0);
-//        queue.add(root);
-//        while (!queue.isEmpty()) {
-//            Node node = queue.remove();
-//            if (goalTest(node.state)) {
-//                visualize(node.state);
-//                return "Found a solution here";
-//            } else {//Expansion
-//                expand(queue, node);
-//            }
-//        }
-//        return "";
-//    }
-
     void expand(PriorityQueue<Node> queue, Node node) {
 
     }
@@ -31,8 +15,6 @@ public class Matrix extends SearchProblem {
         StringBuilder sb = new StringBuilder();
         int M = 5 + (int) (Math.random() * 11);
         int N = 5 + (int) (Math.random() * 11);
-//        int M = 5;
-//        int N = 5;
         boolean[][] taken = new boolean[M][N];
         int carryCapacity = 1 + (int) (Math.random() * 4);
         int n_free_cells = M * N;
@@ -78,14 +60,8 @@ public class Matrix extends SearchProblem {
         }
         n_free_cells -= n_pills;
 
-        //No bounds for the number of pads are set in the description.
         int nrpads = 1 + (int) (Math.random() * ((n_free_cells - 1) / 2));
-        /*
-         String[] pads is a multiple of 8
-         *2 to contain x and y for each pad
-         *2 so as every start pad Px should have a corresponding finish pad Py
-         *2 so as for every pair Px, Py we should output the other direction (Py, Px) as well
-         */
+
         String[] pads = new String[nrpads * 1 * 2 * 2 * 2];
         for (int i = 0; i < pads.length; i += 8) {
             int x1, y1, x2, y2;
@@ -139,21 +115,20 @@ public class Matrix extends SearchProblem {
         String initialState = ProblemParser.parseProblem(grid);
         System.out.println("Initial state stateString: ");
         System.out.println(initialState);
-        // TODO: Create root node and (enqueue) it
+
         HashSet<String> visitedStates = new HashSet<>();
         Node root = new Node(initialState, null, null, 0, 0);
-        // TODO: Start expanding the nodes with actions
+
 
         //BFS
         PriorityQueue<Node> queue = new PriorityQueue<>(Comparator.comparingInt(node -> node.depth));
-        //DFS
-//        PriorityQueue<Node> queue = new PriorityQueue<>(Comparator.comparingInt(node -> -node.depth));
+
         queue.add(root);
         int expandedNodesCnt = 0;
         while (!queue.isEmpty()) {
             Node currentNode = queue.poll();
             expandedNodesCnt++;
-//            visualize(currentNode.state);
+
             State state = new State(currentNode.state);
             ;
             if (goalTest(state)) {
@@ -198,8 +173,6 @@ public class Matrix extends SearchProblem {
         return "";
     }
 
-    // TODO: Visualise works with  String state;
-    // did it temporarily like that; need to discuss where visualize is called so that unnecessary conversions are done
     static void visualize(String currentState) {
         visualize(new State(currentState));
     }
@@ -274,7 +247,7 @@ public class Matrix extends SearchProblem {
         System.out.printf("#Dead=%d\t#Killed=%d\tneo Damage=%d\n", currentState.countDead, currentState.countKilled, currentState.neoDamage);
     }
 
-    // the goal test should take the variables directly and return false or true, no need for the string state?
+    // the goal test should take the variables directly and return false or true, no need for the string state
     static boolean goalTest(State state) {
         return state.neoX == MatrixConfig.telephoneX && state.neoY==MatrixConfig.telephoneY &&
                 state.hostagesDamage.size() == 0 && state.carriedDamage.size() == 0 && state.mutatedX.size() == 0;
@@ -285,7 +258,7 @@ public class Matrix extends SearchProblem {
         Node current = node;
         Action action = node.action;
         while (current.parent != null) {
-//            visualize(current.state);
+//          visualize(current.state);
             System.out.println(action);
             current = current.parent;
             action = current.action;
@@ -295,41 +268,10 @@ public class Matrix extends SearchProblem {
 
     public static void main(String[] args) {
         System.out.println("Hello world");
-//      String p1 = "14,5;2;7,0;2,3;8,3,8,1,9,2,2,0;8,3,9,1,0,4,6,1;2,0,10,1,10,1,2,0;6,2,76,7,2,78,0,0,55,11,2,11,4,4,90,2,4,56,0,2,21,13,2,63,12,3,85,1,2,26";
-        //String problem = "3,3;1;2,2;1,2;;;;2,0,88";
-        //String problem = "3,3;1;2,2;1,2;;;;2,0,84";
-        //String problem = "3,3;1;2,2;1,2;2,1;;;2,0,80";
-//        String problem = "3,3;1;2,2;1,2;2,1,1,1;;;2,0,80";
         String problem = "5,5;2;0,4;1,4;0,1,1,1,2,1,3,1,3,3,3,4;1,0,2,4;0,3,4,3,4,3,0,3;0,0,30,3,0,80,4,4,80";
-
-        //String problem = "3,3;1;2,2;1,2;;;;2,0,0";
-        //String problem = genGrid();
         System.out.println("Gengrid Output:\n" + problem);
         System.out.println(solve(problem, "", true));
 
     }
 }
 
-/*
-neo 1
-tb  1
-                    f(n,m) = N*M - 2
-
-hostages    3:10
-pills       1:hostages
-agents      1:inf                   INF -> free
-
- */
-
-
-/*
-------------------------------------------------------------------STATE STRING------------------------------------------
-NeoX,NeoY,NeoDamage;
-countOfKilledAgents;
-AgentX1,AgentY1, ...,AgentXk,AgentYk;
-PillX1,PillY1, ...,PillXg,PillYg;
-countOfDeadHostages;
-HostageX1,HostageY1,HostageDamage1, ...,HostageXw,HostageYw,HostageDamagew;
-carriedDamage1, ...,carriedDamageu;
-mutatedX1,mutatedY1, ...,mutatedXv,mutatedYv
- */
