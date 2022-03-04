@@ -44,7 +44,6 @@ public final class ProblemParser {
         String[] carried = new String[0];
         String[] mutated = new String[0];
 
-
         MatrixConfig.M = M;
         MatrixConfig.N = N;
         MatrixConfig.carryCapacity = carryCapacity;
