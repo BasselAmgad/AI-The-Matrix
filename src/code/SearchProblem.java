@@ -1,5 +1,5 @@
 package code;
 
 public abstract class SearchProblem {
-//    Action[] operators;
+  // Abstract class for defining the search problem
 }
