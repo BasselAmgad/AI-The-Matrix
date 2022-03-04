@@ -11,7 +11,6 @@ public class State {
     int countDead;
     ArrayList<Integer> hostagesX, hostagesY, hostagesDamage;
     ArrayList<Integer> carriedDamage;
-    //removed carriedX, carriedY because the last updates in the description made them unnecessary
     ArrayList<Integer> mutatedX, mutatedY;
 
     public String decodeState() {
