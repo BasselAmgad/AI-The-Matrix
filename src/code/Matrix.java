@@ -168,14 +168,8 @@ public class Matrix extends SearchProblem {
         }
         n_free_cells -= n_pills;
 
-        //No bounds for the number of pads are set in the description.
         int nrpads = 1 + (int) (Math.random() * ((n_free_cells - 1) / 2));
-        /*
-         String[] pads is a multiple of 8
-         *2 to contain x and y for each pad
-         *2 so as every start pad Px should have a corresponding finish pad Py
-         *2 so as for every pair Px, Py we should output the other direction (Py, Px) as well
-         */
+
         String[] pads = new String[nrpads * 1 * 2 * 2 * 2];
         for (int i = 0; i < pads.length; i += 8) {
             int x1, y1, x2, y2;

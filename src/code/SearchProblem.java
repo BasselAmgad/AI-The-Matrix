@@ -2,8 +2,8 @@ package code;
 
 import java.util.*;
 
+// Abstract class for defining the search problem
 public abstract class SearchProblem {
-
     public Operator[] operators;
     public String initialState;
     //Keeping track of all visited states in order to prevent having nodes with repeated states
